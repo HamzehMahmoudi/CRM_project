@@ -2,21 +2,34 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+from django.core.validators import FileExtensionValidator
 # Create your models here.
 
 User = get_user_model()
 
 
+class OrganizationProduct(models.Model):
+    """ product that company produce"""
+    name = models.CharField(verbose_name=_("Product name"), max_length=50)
+
+
 class Product(models.Model):
     """our product that we sell to the client"""
     name = models.CharField(verbose_name=_("Product name "), max_length=50)
-    qty_in_stock = models.IntegerField(verbose_name=_("Avalable qty"))
+    price = models.IntegerField(verbose_name=_("Product price"))
+    taxable = models.BooleanField(verbose_name=_("Taxable"))
+    pdf_catalogue = models.FileField(_("Catalogue (only pdf)"), upload_to=None, max_length=100, validators=[
+                                     FileExtensionValidator(allowed_extensions=['pdf'])])  # this method is not safe because its just look at ext of file not magic numbers in binary
+    img_catalogue = models.ImageField(verbose_name=_(
+        "catalogue (only img)"), upload_to=None, max_length=None)
+    technical_info = models.TextField(verbose_name=_("technical information"))
+    related_product = models.ManyToManyField(
+        OrganizationProduct, verbose_name=_("related product"))
 
 
 class OrganizationProduct(models.Model):
     """ product that company produce"""
     name = models.CharField(verbose_name=_("Product name"), max_length=50)
-    related_product = models.ManyToManyField(Product, verbose_name=_(""))
 
 
 class Organization(models.Model):

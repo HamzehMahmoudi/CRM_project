@@ -10,13 +10,14 @@ class CreateOragan(generic.CreateView):
     """
     form_class = OrganForm
     template_name = "organization/creatorgan.html"
+    success_url = 'organlist'
 
     def form_valid(self, form):
-        instance = form.save(commit=False).creator
+        instance = form.save(commit=False)
         instance.creator = self.request.user
         instance.save()
         return redirect('organlist')
-
+    
 
 class Organlist(generic.ListView):
     """

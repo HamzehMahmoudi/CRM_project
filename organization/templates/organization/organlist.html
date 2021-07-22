@@ -1,0 +1,27 @@
+{% extends 'users/base.html' %}
+{% load i18n %}
+{% block body %}
+    <table style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif" class="table table-bordered table-striped {% if bidi == rtl %}rtl{% endif %}">
+        <h1 class="text-success rtl ">
+        </h1>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{% trans "organization" %}</th>
+                <th>{% trans "added by" %}</th>
+                <th>{% trans "Agent" %}</th>
+                <th>{% trans "options" %}</th>
+            </tr>
+        </thead>
+        {% for org in page_obj %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ org.name}}</td>
+            <td>{{org.creator.username}}</td>
+            <td >{{org.agent}}</td>
+            <td><a href=""><i class="fas fa-bullhorn"></i></a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'createorgan' %}" class="btn btn-primary"><i class="fas fa-plus"></i> <strong>Organization</strong></a>
+{% endblock body %}

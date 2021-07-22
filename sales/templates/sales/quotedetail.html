@@ -1,0 +1,51 @@
+{% load static %}
+{% load i18n %}
+{% get_current_language_bidi as bidi %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/all.css' %}" rel="stylesheet">
+</head>    
+<body class="container">
+<dl class="row mt-5">
+    <dt class="col-sm-3">{% trans "client" %}</dt>
+    <dd class="col-sm-9">{{ object.organization.name}}</dd>
+   <!-- <dt class="col-sm-3">{% trans "date" %}</dt>
+    <dd class="col-sm-9">{{ object.created_on.date }} {{ object.created_on.time }}</dd> -->
+</dl>
+<table class="table table-bordered table-striped {% if bidi == rtl %}rtl{% endif %}">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th class = "col-6">{% trans "product" %}</th>
+            <th>{% trans "Qty" %}</th>
+            <th>{% trans "fee" %}</th>
+            <th>{% trans "total price" %}</th>
+        </tr>
+        </thead>
+        {% for item in object.quoteitem_set.all %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.product.name}}</td>
+                <td>{{ item.qty }}</td>
+                <td>{{ item.product.price }} $</td>
+                <td>{{ item.get_total }} $</td>
+            </tr>
+        {% endfor %}
+ <tfoot>
+    <tr>
+        <td colspan="3">
+            
+        </td>
+        <td colspan="2">
+            {% trans "total price" %} : 
+        </td>
+    </tr>
+    </tfoot>        
+</table>
+</body>
+</html>
+<!DOCTYPE html>

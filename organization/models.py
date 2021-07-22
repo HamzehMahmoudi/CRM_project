@@ -11,19 +11,25 @@ class OrganizationProduct(models.Model):
     """ product that company produce"""
     name = models.CharField(verbose_name=_("Product name"), max_length=50)
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Product(models.Model):
     """our product that we sell to the client"""
     name = models.CharField(verbose_name=_("Product name "), max_length=50)
     price = models.IntegerField(verbose_name=_("Product price"))
     taxable = models.BooleanField(verbose_name=_("Taxable"))
-    pdf_catalogue = models.FileField(_("Catalogue (only pdf)"), upload_to=None, max_length=100, validators=[
+    pdf_catalogue = models.FileField(_("Catalogue (only pdf)"), upload_to='pdf/', max_length=100, validators=[
                                      FileExtensionValidator(allowed_extensions=['pdf'])])  # this method is not safe because its just look at ext of file not magic numbers in binary
     img_catalogue = models.ImageField(verbose_name=_(
-        "catalogue (only img)"), upload_to=None, max_length=None)
+        "catalogue (only img)"), upload_to="img/", max_length=300)
     technical_info = models.TextField(verbose_name=_("technical information"))
     related_product = models.ManyToManyField(
         OrganizationProduct, verbose_name=_("related product"))
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class Organization(models.Model):
@@ -38,10 +44,12 @@ class Organization(models.Model):
     agent = models.CharField(max_length=50, null=False,
                              blank=False, verbose_name=_("Organization agent"))
     agent_phone = models.CharField(max_length=11, null=False,
-                                   blank=False, verbose_name=_("Phone number"))
+                                   blank=False, verbose_name=_("agent Phone number"))
     registered_on = models.DateTimeField(
         auto_now_add=True, verbose_name=_("Registered at"))
-    product = models.ForeignKey(
-        OrganizationProduct, verbose_name=_("Organization product"), on_delete=models.PROTECT)
+    product = models.CharField(_("Organization product"), max_length=50)
     creator = models.ForeignKey(
         User, verbose_name=_("added by"), on_delete=models.PROTECT)
+
+    def __str__(self):
+        return f'{self.name}-{self.province}'

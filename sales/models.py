@@ -33,10 +33,13 @@ class QuoteItem(models.Model):
     quote = models.ForeignKey(
         Quote, verbose_name=_("quote"), on_delete=models.CASCADE)
 
+    def get_total(self):
+        return self.qty * self.product.price
+
 
 class EmailHistory(models.Model):
-    reciver = models.EmailField(verbose_name=_(
-        "Reciver"), max_length=254, null=False, blank=False)
+    reciver = models.ForeignKey(Organization, verbose_name=_(
+        "Reciver"), on_delete=models.PROTECT)
     status = models.CharField(
         max_length=20,
         verbose_name=_("status"),
@@ -47,3 +50,6 @@ class EmailHistory(models.Model):
         "Sender"), on_delete=models.PROTECT)
     send_on = models.DateTimeField(
         auto_now_add=True, verbose_name=_("Send at"))
+
+    def __str__(self):
+        return f"{self.sender.username} to {self.reciver.name}"

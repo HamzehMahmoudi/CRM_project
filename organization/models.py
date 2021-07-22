@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import ugettext as _
-from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 # Create your models here.
@@ -27,11 +26,6 @@ class Product(models.Model):
         OrganizationProduct, verbose_name=_("related product"))
 
 
-class OrganizationProduct(models.Model):
-    """ product that company produce"""
-    name = models.CharField(verbose_name=_("Product name"), max_length=50)
-
-
 class Organization(models.Model):
     """organization model"""
     name = models.CharField(max_length=50, null=False,
@@ -46,8 +40,8 @@ class Organization(models.Model):
     agent_phone = models.CharField(max_length=11, null=False,
                                    blank=False, verbose_name=_("Phone number"))
     registered_on = models.DateTimeField(
-        default=timezone.now(), verbose_name=_("Registered at"))
+        auto_now_add=True, verbose_name=_("Registered at"))
     product = models.ForeignKey(
-        OrganizationProduct, verbose_name=_("Organization product"))
+        OrganizationProduct, verbose_name=_("Organization product"), on_delete=models.PROTECT)
     creator = models.ForeignKey(
         User, verbose_name=_("added by"), on_delete=models.PROTECT)

@@ -1,0 +1,30 @@
+{% extends 'users/base.html' %}
+{% load i18n %}
+{% block body %}
+    <table style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif" class="table table-bordered table-striped {% if bidi == rtl %}rtl{% endif %}">
+        <h1 class="text-success rtl ">
+        </h1>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{% trans "client" %}</th>
+                <th>{% trans "product" %}</th>
+                <th>{% trans "pdf" %}</th>
+                <th>{% trans "options" %}</th>
+            </tr>
+        </thead>
+        {% for quote in page_obj %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ quote.organization.name}}</td>
+            <td></td>
+            <td>download</td>
+            <td>
+                <a href="{% url 'email' quote.id %}">
+                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock body %}

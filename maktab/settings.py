@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
+    'sales',
+    'organization',
     "crispy_forms",
 ]
 
@@ -143,3 +145,10 @@ LOGIN_URL = "login"
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = "587"
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = "djangoa09@gmail.com"
+SERVER_EMAIL = "djangoa09@gmail.com"
+EMAIL_HOST_USER = "djangoa09@gmail.com"
+EMAIL_HOST_PASSWORD = "djangounchained"

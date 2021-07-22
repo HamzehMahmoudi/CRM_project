@@ -27,7 +27,7 @@ class Quote(models.Model):
 
 
 class QuoteItem(models.Model):
-    prodduct = models.ForeignKey(Product, verbose_name=_(
+    product = models.ForeignKey(Product, verbose_name=_(
         "product"), on_delete=models.PROTECT)
     qty = models.IntegerField(_("qty"))
     quote = models.ForeignKey(

@@ -17,7 +17,7 @@
         <tr>
             <td>{{ forloop.counter }}</td>
             <td>{{ quote.organization.name}}</td>
-            <td></td>
+            <td>{% for item in quote.quoteitem_set.all %}{{item.product.name}}{% endfor %}</td>
             <td>download</td>
             <td>
                 <a href="{% url 'email' quote.id %}">

@@ -1,3 +1,5 @@
+from organization.models import Organization, Product
+from organization.forms import OrganForm
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.utils import timezone
@@ -18,11 +20,16 @@ class FollowUp(models.Model):
 
 
 class Quote(models.Model):
-    pass
+    organization = models.ForeignKey(Organization, verbose_name=_(
+        "organization"), on_delete=models.PROTECT)
 
 
 class QuoteItem(models.Model):
-    pass
+    prodduct = models.ForeignKey(Product, verbose_name=_(
+        "product"), on_delete=models.PROTECT)
+    qty = models.IntegerField(_("qty"))
+    quote = models.ForeignKey(
+        Quote, verbose_name=_("quote"), on_delete=models.CASCADE)
 
 
 class EmailHistory(models.Model):
@@ -38,5 +45,3 @@ class EmailHistory(models.Model):
         "Sender"), on_delete=models.PROTECT)
     send_on = models.DateTimeField(
         default=timezone.now(), verbose_name=_("Send at"))
-
-    pass

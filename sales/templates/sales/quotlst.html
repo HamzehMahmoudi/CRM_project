@@ -18,7 +18,7 @@
             <td>{{ quote.organization.name}}</td>
             <td>{% for item in quote.quoteitem_set.all %}{{item.product.name}}{% endfor %}</td>
             <td >
-                <a href="{% url 'email' quote.id %}" data-toggle="tooltip" data-placement="top" title="Send as Email">
+                <a data-toggle="tooltip" data-placement="top" title="Send as Email" onclick="send_email({{quote.pk}})">
                     <i class="fa fa-envelope" aria-hidden="true"></i>
                 </a>&nbsp;&nbsp;&nbsp;         
                 <a  href={% url 'qoute-detail' quote.pk %}  data-toggle="tooltip" data-placement="top" title="Download"> <i class="fa fa-download" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
@@ -27,4 +27,23 @@
         </tr>
         {% endfor %}
     </table>
+    <script>
+    function send_email(quote){
+            $.ajax({
+                method:'get',
+                url:"{% url 'email' %}",
+                data:{
+                    qid: quote
+                },
+                success:function(){ 
+                    //show alert when email sent
+                    alert("email sent")
+                },
+                error:function(){
+                    alert("somthing wrong plz try again later")                    
+                }
+
+            })
+        }
+</script>
 {% endblock body %}

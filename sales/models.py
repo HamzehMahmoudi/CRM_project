@@ -34,7 +34,11 @@ class QuoteItem(models.Model):
         Quote, verbose_name=_("quote"), on_delete=models.CASCADE)
 
     def get_total(self):
-        return self.qty * self.product.price
+        tax = 0
+        if self.product.taxable:
+            tax = (self.qty * self.product.price) * (9 / 100)
+
+        return (self.qty * self.product.price) + tax
 
 
 class EmailHistory(models.Model):

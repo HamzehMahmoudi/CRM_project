@@ -7,11 +7,14 @@ from django.template.loader import render_to_string
 from django.views import generic
 from django.utils.html import strip_tags
 import weasyprint
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 
-def email(request, qid):
+@csrf_exempt
+def email(request):
+    qid = request.GET.get('qid')
     quote = Quote.objects.get(id=qid)
     subject = 'this is your Quote'
     context = {"object": quote}

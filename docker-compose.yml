@@ -15,6 +15,10 @@ services:
     cache:
         image: "memcached:alpine"
         ports:
-            - 11211:11211                    
+            - 11211:11211 
+    broker:
+        image: "rabbitmq:alpine"
+        ports:
+            - 5672:5672                               
 volumes:
     finalDbData:

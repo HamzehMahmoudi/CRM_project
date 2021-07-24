@@ -1,3 +1,4 @@
+from sales.tasks import send_email_task
 from django.db.models.base import Model
 from django.shortcuts import render, redirect
 from django.core.mail import EmailMultiAlternatives
@@ -10,29 +11,35 @@ import weasyprint
 from django.http import HttpResponse, HttpRequest
 from django.views.decorators.csrf import csrf_exempt
 from .enums import EmailStatus
+from .tasks import send_email_task
 # Create your views here.
 
 
+# @csrf_exempt
+# def email(request):
+#     try:
+#         qid = request.GET.get('qid')
+#         quote = Quote.objects.get(id=qid)
+#         subject = 'this is your Quote'
+#         context = {"object": quote}
+#         html = render_to_string('sales/quotedetail.html', context=context)
+#         text_content = strip_tags(html)
+#         sender = settings.EMAIL_HOST_USER
+#         email = quote.organization.email
+#         msg = EmailMultiAlternatives(subject, text_content, sender, [email])
+#         msg.attach_alternative(html, "text/html")
+#         msg.send()
+#         EmailHistory(sender=request.user, reciver=quote.organization).save()
+#         return HttpResponse(status=200)
+#     except:  # if any exception happend create an EmailHistory object and set Status NOt_SEND
+#         EmailHistory(sender=request.user, reciver=quote.organization,
+#                      status=EmailStatus.NOT_SEND).save()
+#         return HttpResponse(status=200)
 @csrf_exempt
 def email(request):
-    try:
-        qid = request.GET.get('qid')
-        quote = Quote.objects.get(id=qid)
-        subject = 'this is your Quote'
-        context = {"object": quote}
-        html = render_to_string('sales/quotedetail.html', context=context)
-        text_content = strip_tags(html)
-        sender = settings.EMAIL_HOST_USER
-        email = quote.organization.email
-        msg = EmailMultiAlternatives(subject, text_content, sender, [email])
-        msg.attach_alternative(html, "text/html")
-        msg.send()
-        EmailHistory(sender=request.user, reciver=quote.organization).save()
-        return HttpResponse(status=200)
-    except:  # if any exception happend create an EmailHistory object and set Status NOt_SEND
-        EmailHistory(sender=request.user, reciver=quote.organization,
-                     status=EmailStatus.NOT_SEND).save()
-        return HttpResponse(status=200)
+    qid = request.GET.get('qid')
+    send_email_task.delay(request.user.pk, qid)
+    return redirect('qoutelist')
 
 
 class QuoteList(generic.ListView):

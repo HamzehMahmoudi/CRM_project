@@ -152,3 +152,7 @@ DEFAULT_FROM_EMAIL = "djangoa09@gmail.com"
 SERVER_EMAIL = "djangoa09@gmail.com"
 EMAIL_HOST_USER = "djangoa09@gmail.com"
 EMAIL_HOST_PASSWORD = "djangounchained"
+
+CELERY_BROKER_URL = 'pyamqp://guest@localhost//'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'

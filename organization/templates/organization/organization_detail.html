@@ -1,0 +1,63 @@
+{% extends 'users/base.html' %}
+{% block body %}
+<div class="card" style="width:100% ;">
+  <div class="card-body">
+    <h1 class="card-title ">Organization : {{object.name}}</h1>
+    <div class="row">
+        <div class="col-sm-9 card-text">
+            <div class="row">
+                <p class ="col h4 mx-5" style="margin-top:40px">Province : {{object.province}}</p>
+                <p class ="col h4 mx-5" style="margin-top:40px">Phone : {{object.phone}}</p>
+            </div>
+        </div>
+        <div class="col-sm-9 card-text">
+            <div class="row">
+                <p class ="col h4 mx-5" style="margin-top:40px">workers : {{object.workers}}</p>
+                <p class ="col h4 mx-5" style="margin-top:40px">Email : {{object.email}}</p>
+            </div>
+        </div>
+        <div class="col-sm-9 card-text">
+            <div class="row">
+                <p class ="col h4 mx-5" style="margin-top:40px">regestered by : {{object.creator}}</p>
+                <p class ="col h4 mx-5" style="margin-top:40px">registred at : {{object.registered_on.date}}</p>
+            </div>
+        </div>                
+    </div>
+    <br>
+    <br>
+    <hr>
+    <br>
+    <h1 class="card-title ">Agent</h1>
+        <div class="row">
+        <div class="col-sm-9 card-text">
+            <div class="row">
+                <p class ="col h4 mx-5" style="margin-top:40px">name : {{object.agent}}</p>
+                <p class ="col h4 mx-5" style="margin-top:40px">Phone : {{object.agent_phone}}</p>
+            </div>
+        </div>
+    </div> 
+    <br>
+    <br>
+    <hr>
+    <br>
+    <h1 class="card-title ">Related product</h1>
+        <div class="row">
+        {% for item in object.get_org_product.product_set.all %}
+        <div class="col-sm-9 card-text">
+            <div class="row">
+                <p class ="col h4 mx-5" style="margin-top:40px">Name : {{item.name}}</p>
+                <p class ="col h4 mx-5" style="margin-top:40px">Price : {{item.price}}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>       
+    <a href="#" class="card-link">Card link</a>
+    <a href="#" class="card-link">Another link</a>
+  </div>
+</div>
+        <div class="col-sm-9 card-text">
+            <div class="row">
+                <p class ="col h4 mx-5" style="margin-top:40px">regestered by : {{object.creator}}</p>
+            </div>
+        </div>
+{% endblock body %}

@@ -50,6 +50,11 @@ class Organization(models.Model):
     product = models.CharField(_("Organization product"), max_length=50)
     creator = models.ForeignKey(
         User, verbose_name=_("added by"), on_delete=models.PROTECT)
+    workers = models.IntegerField(verbose_name=_(
+        "workers qty"), blank=True, null=True)
+
+    def get_org_product(self):
+        return OrganizationProduct.objects.get(name=self.product)
 
     def __str__(self):
         return f'{self.name}-{self.province}'

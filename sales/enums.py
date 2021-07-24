@@ -8,4 +8,4 @@ class EmailStatus(models.TextChoices):
     """
 
     SENT = "SENT", _("Sent")
-    CANCELED = "CANCELED", _("Canceled")
+    NOT_SEND = "NOT_SEND", _("NotSend")

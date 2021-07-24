@@ -1,4 +1,5 @@
-from organization.models import Organization
+from django.db.models.fields import related
+from . import models
 from django.shortcuts import redirect, render
 from django.views import generic
 from .forms import OrganForm
@@ -17,12 +18,16 @@ class CreateOragan(generic.CreateView):
         instance.creator = self.request.user
         instance.save()
         return redirect('organlist')
-    
+
 
 class Organlist(generic.ListView):
     """
     view to see all organizations together 
     """
-    model = Organization
+    model = models.Organization
     template_name = "organization/organlist.html"
     paginate_by = 10  # show 10 organization per page
+
+
+class OrgDetail(generic.DetailView):
+    model = models.Organization

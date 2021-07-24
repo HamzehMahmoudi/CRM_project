@@ -24,6 +24,11 @@ class Quote(models.Model):
         "organization"), on_delete=models.PROTECT)
     user = models.ForeignKey(User, verbose_name=_(
         "creator"), on_delete=models.PROTECT)
+    created_on = models.DateTimeField(
+        _("created on"), auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.organization} by {self.user}"
 
 
 class QuoteItem(models.Model):
@@ -32,6 +37,9 @@ class QuoteItem(models.Model):
     qty = models.IntegerField(_("qty"))
     quote = models.ForeignKey(
         Quote, verbose_name=_("quote"), on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.qty} of {self.product}"
 
     def get_total(self):
         tax = 0
@@ -43,7 +51,7 @@ class QuoteItem(models.Model):
 
 class EmailHistory(models.Model):
     reciver = models.ForeignKey(Organization, verbose_name=_(
-        "Reciver"), on_delete=models.PROTECT)
+        "to"), on_delete=models.PROTECT)
     status = models.CharField(
         max_length=20,
         verbose_name=_("status"),
@@ -51,7 +59,7 @@ class EmailHistory(models.Model):
         default=enums.EmailStatus.SENT,
     )
     sender = models.ForeignKey(User, verbose_name=_(
-        "Sender"), on_delete=models.PROTECT)
+        "from"), on_delete=models.PROTECT)
     send_on = models.DateTimeField(
         auto_now_add=True, verbose_name=_("Send at"))
 

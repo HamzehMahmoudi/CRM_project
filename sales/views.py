@@ -9,24 +9,30 @@ from django.utils.html import strip_tags
 import weasyprint
 from django.http import HttpResponse, HttpRequest
 from django.views.decorators.csrf import csrf_exempt
+from .enums import EmailStatus
 # Create your views here.
 
 
 @csrf_exempt
 def email(request):
-    qid = request.GET.get('qid')
-    quote = Quote.objects.get(id=qid)
-    subject = 'this is your Quote'
-    context = {"object": quote}
-    html = render_to_string('sales/quotedetail.html', context=context)
-    text_content = strip_tags(html)
-    sender = settings.EMAIL_HOST_USER
-    email = quote.organization.email
-    msg = EmailMultiAlternatives(subject, text_content, sender, [email])
-    msg.attach_alternative(html, "text/html")
-    msg.send()
-    EmailHistory(sender=request.user, reciver=quote.organization).save()
-    return redirect('qoutelist')
+    try:
+        qid = request.GET.get('qid')
+        quote = Quote.objects.get(id=qid)
+        subject = 'this is your Quote'
+        context = {"object": quote}
+        html = render_to_string('sales/quotedetail.html', context=context)
+        text_content = strip_tags(html)
+        sender = settings.EMAIL_HOST_USER
+        email = quote.organization.email
+        msg = EmailMultiAlternatives(subject, text_content, sender, [email])
+        msg.attach_alternative(html, "text/html")
+        msg.send()
+        EmailHistory(sender=request.user, reciver=quote.organization).save()
+        return HttpResponse(status=200)
+    except:  # if any exception happend create an EmailHistory object and set Status NOt_SEND
+        EmailHistory(sender=request.user, reciver=quote.organization,
+                     status=EmailStatus.NOT_SEND).save()
+        return HttpResponse(status=200)
 
 
 class QuoteList(generic.ListView):

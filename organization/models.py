@@ -1,3 +1,4 @@
+import organization
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib.auth import get_user_model
@@ -10,9 +11,11 @@ User = get_user_model()
 class OrganizationProduct(models.Model):
     """ product that company produce"""
     name = models.CharField(verbose_name=_("Product name"), max_length=50)
+    organization = models.ForeignKey("organization.Organization", verbose_name=_(
+        "organization"), on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} of {self.organization}"
 
 
 class Product(models.Model):

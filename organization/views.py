@@ -29,7 +29,7 @@ class Organlist(generic.ListView):
     template_name = "organization/organlist.html"
     paginate_by = 10  # show 10 organization per page
 
-    def get_queryset(self):
+    def get_queryset(self):  # only org creator can see oganization
         return models.Organization.objects.filter(creator=self.request.user)
 
 
@@ -38,7 +38,7 @@ class OrgDetail(generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         obj = self.get_object()
-        if self.request.user == obj.creator:
+        if self.request.user == obj.creator:  # only org creator can see details
             return super().get(request, *args, **kwargs)
         else:
             raise PermissionDenied

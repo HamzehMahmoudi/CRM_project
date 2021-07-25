@@ -1,17 +1,15 @@
+import organization
 from sales.tasks import send_email_task
-from django.db.models.base import Model
 from django.shortcuts import render, redirect
-from django.core.mail import EmailMultiAlternatives
-from django.conf import settings
-from .models import Quote, EmailHistory
-from django.template.loader import render_to_string
+from .models import Quote, QuoteItem
 from django.views import generic
-from django.utils.html import strip_tags
 import weasyprint
 from django.http import HttpResponse, HttpRequest
 from django.views.decorators.csrf import csrf_exempt
-from .enums import EmailStatus
 from .tasks import send_email_task
+from organization import models
+from django.forms import formset_factory
+from .forms import QuoteitemForm
 # Create your views here.
 
 
@@ -39,7 +37,7 @@ from .tasks import send_email_task
 def email(request):
     qid = request.GET.get('qid')
     send_email_task.delay(request.user.pk, qid)
-    return redirect('qoutelist')
+    return redirect('quotelist')
 
 
 class QuoteList(generic.ListView):
@@ -66,3 +64,26 @@ class QuoteDetail(generic.DetailView):
                                   base_url="http://127.0.0.1:8000").write_pdf()
             response = HttpResponse(pdf, content_type="application/pdf")
             return response
+
+
+def create_quote(request, pk):
+    organ = models.Organization.objects.get(pk=pk)
+    quote = Quote(organization=organ, user=request.user)
+    quote.save()
+    return redirect('add-item', qid=quote.pk)
+
+
+@csrf_exempt
+def add_item(request, qid):
+    quote = Quote.objects.get(pk=qid)
+    QuoteitemFormset = formset_factory(QuoteitemForm)
+    if request.method == 'POST':
+        formset = QuoteitemFormset(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                form.save(commit=False).quote = quote
+                form.save()
+        return redirect('add-item', qid=quote.pk)
+    else:
+        formset = QuoteitemFormset()
+        return render(request, 'sales/add_quote.html', {"formset": formset})

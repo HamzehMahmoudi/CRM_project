@@ -1,0 +1,19 @@
+{% extends "users/base.html" %}
+{%load l10n%}
+{% block title %}Qoute{% endblock %}
+{% block body %}
+{% load crispy_forms_tags %}
+<h1 class='display-4' style='text-align:center'> Qoute</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table>
+        {% for form in formset %}
+        {{ form }}
+        {% endfor %}
+    </table>
+<button type="submit" class='btn btn-primary'>add</button>
+</form>
+
+<a class="btn btn-success"href="{% url 'quotelist' %}">Done</a>
+{% endblock %}

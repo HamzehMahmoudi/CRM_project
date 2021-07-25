@@ -37,6 +37,7 @@ class QuoteItem(models.Model):
     qty = models.IntegerField(_("qty"))
     quote = models.ForeignKey(
         Quote, verbose_name=_("quote"), on_delete=models.CASCADE)
+    discount = models.IntegerField(verbose_name=_("discount"), default=0)
 
     def __str__(self):
         return f"{self.qty} of {self.product}"
@@ -46,7 +47,7 @@ class QuoteItem(models.Model):
         if self.product.taxable:
             tax = (self.qty * self.product.price) * (9 / 100)
 
-        return (self.qty * self.product.price) + tax
+        return (self.qty * self.product.price) + tax - self.discount
 
 
 class EmailHistory(models.Model):

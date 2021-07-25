@@ -47,7 +47,7 @@
         </div>
     <br>
     <hr>
-    <a href="#" class="card-link">Card link</a>
+    <a href="{% url 'create-quote' object.id %}" class="btn btn-success">Create Quote </a>
     <a href="#" class="card-link">Another link</a>
     <div class ="text-right">
         <p>regestered by : {{object.creator}}</p>

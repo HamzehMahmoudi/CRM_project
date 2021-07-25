@@ -3,6 +3,7 @@ from . import models
 from django.shortcuts import redirect, render
 from django.views import generic
 from .forms import OrganForm
+from django.core.exceptions import PermissionDenied
 
 
 class CreateOragan(generic.CreateView):
@@ -28,6 +29,16 @@ class Organlist(generic.ListView):
     template_name = "organization/organlist.html"
     paginate_by = 10  # show 10 organization per page
 
+    def get_queryset(self):
+        return models.Organization.objects.filter(creator=self.request.user)
+
 
 class OrgDetail(generic.DetailView):
     model = models.Organization
+
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if self.request.user == obj.creator:
+            return super().get(request, *args, **kwargs)
+        else:
+            raise PermissionDenied

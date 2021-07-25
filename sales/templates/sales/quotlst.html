@@ -16,7 +16,7 @@
         <tr>
             <td>{{ forloop.counter }}</td>
             <td>{{ quote.organization.name}}</td>
-            <td>{% for item in quote.quoteitem_set.all %}{{item.product.name}}{% endfor %}</td>
+            <td>{% for item in quote.quoteitem_set.all %}{{item.product.name}}, {% endfor %}</td>
             <td class="d-flex justify-content-around" >
                 <a data-toggle="tooltip" data-placement="top" title="Send as Email" onclick="send_email({{quote.pk}})">
                     <i class="fa fa-envelope" aria-hidden="true"></i>

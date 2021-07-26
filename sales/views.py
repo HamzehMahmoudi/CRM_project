@@ -1,7 +1,10 @@
+from django import views
+from django.db.models.fields import mixins
 from sales.tasks import send_email_task
 from django.shortcuts import render, redirect
 from .models import Quote, QuoteItem
 from django.views import generic
+from django.contrib.auth import mixins, decorators
 import weasyprint
 from django.http import HttpResponse, HttpRequest
 from django.views.decorators.csrf import csrf_exempt
@@ -33,6 +36,7 @@ from django.contrib import messages
 #         EmailHistory(sender=request.user, reciver=quote.organization,
 #                      status=EmailStatus.NOT_SEND).save()
 #         return HttpResponse(status=200)
+@decorators.login_required
 @csrf_exempt
 def email(request):
     qid = request.GET.get('qid')
@@ -40,37 +44,49 @@ def email(request):
     return redirect('quotelist')
 
 
-class QuoteList(generic.ListView):
+class QuoteList(mixins.LoginRequiredMixin, generic.ListView):
     model = Quote
     template_name = 'sales/quotlst.html'
     paginate_by = 10
 
     def get_queryset(self):
-        return Quote.objects.filter(user=self.request.user)
+        qs = Quote.objects.filter(user=self.request.user)
+        for q in qs:
+            q.clean_list()
+        return qs
 
 
-class QuoteDetail(generic.DetailView):
+class QuoteDetail(mixins.LoginRequiredMixin, generic.DetailView):
     model = Quote
     template_name = 'sales/quotedetail.html'
 
     def get(self, request, *args, **kwargs):
-        if self.request.GET.get('act') == 'view':
-            # return html response when user click on eye icon
-            return super().get(request, *args, **kwargs)
-        else:    # download the file
+        if self.request.GET.get('act') == 'download':
+            # download the file
             g = super().get(request, *args, **kwargs)
             rendered_content = g.rendered_content
             pdf = weasyprint.HTML(string=rendered_content,
                                   base_url="http://127.0.0.1:8000").write_pdf()
             response = HttpResponse(pdf, content_type="application/pdf")
             return response
+        else:
+            # return html response when user click on eye icon
+            return super().get(request, *args, **kwargs)
 
 
+@decorators.login_required
 def create_quote(request, pk):
     organ = models.Organization.objects.get(pk=pk)
     quote = Quote(organization=organ, user=request.user)
     quote.save()
     return redirect('add-item', qid=quote.pk)
+
+
+def delete_quote_item(request, pk):
+    instance = QuoteItem.objects.get(pk=pk)
+    qpk = instance.quote.pk
+    instance.delete()
+    return redirect("quote-detail", pk=qpk)
 
 
 @csrf_exempt

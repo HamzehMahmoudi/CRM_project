@@ -30,6 +30,11 @@ class Quote(models.Model):
     def __str__(self):
         return f"{self.organization} by {self.user}"
 
+    def clean_list(self):
+        items = self.quoteitem_set.all()
+        if items.count() == 0:
+            self.delete()
+
 
 class QuoteItem(models.Model):
     product = models.ForeignKey(Product, verbose_name=_(

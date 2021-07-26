@@ -24,6 +24,8 @@
             <th>{% trans "Qty" %}</th>
             <th>{% trans "fee" %}</th>
             <th>{% trans "total price" %}</th>
+            <th>{% trans "actions" %}</th>
+
         </tr>
         </thead>
         {% for item in object.quoteitem_set.all %}
@@ -33,6 +35,11 @@
                 <td>{{ item.qty }}</td>
                 <td>{{ item.product.price }} $</td>
                 <td>{{ item.get_total }} $</td>
+                <td>
+                    <a href="{% url "delete-item" item.pk %}" >
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
             </tr>
         {% endfor %}
  <tfoot>

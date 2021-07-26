@@ -12,7 +12,7 @@
                 <th>{% trans "options" %}</th>
             </tr>
         </thead>
-        {% for quote in page_obj %}
+        {% for quote in page_obj %}       
         <tr>
             <td>{{ forloop.counter }}</td>
             <td>{{ quote.organization.name}}</td>
@@ -21,8 +21,8 @@
                 <a href="#"data-toggle="tooltip" data-placement="top" title="Send as Email" onclick="send_email({{quote.pk}})">
                     <i class="fa fa-envelope" aria-hidden="true"></i>
                 </a>        
-                <a  href={% url 'qoute-detail' quote.pk %}  data-toggle="tooltip" data-placement="top" title="Download"> <i class="fa fa-download" aria-hidden="true"></i></a>
-                <a  href="{% url 'qoute-detail' quote.pk %}?act=view" data-toggle="tooltip" data-placement="top" title="View"> <i class="fa fa-eye" aria-hidden="true"></i></a>
+                <a  href="{% url "quote-detail" quote.pk %}?act=download"  data-toggle="tooltip" data-placement="top" title="Download"> <i class="fa fa-download" aria-hidden="true"></i></a>
+                <a  href="{% url "quote-detail" quote.pk %}" data-toggle="tooltip" data-placement="top" title="View"> <i class="fa fa-eye" aria-hidden="true"></i></a>
             </td>
         </tr>
         {% endfor %}

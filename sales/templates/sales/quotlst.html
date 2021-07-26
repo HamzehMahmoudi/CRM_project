@@ -18,7 +18,7 @@
             <td>{{ quote.organization.name}}</td>
             <td>{% for item in quote.quoteitem_set.all %}{{item.product.name}}, {% endfor %}</td>
             <td class="d-flex justify-content-around" >
-                <a data-toggle="tooltip" data-placement="top" title="Send as Email" onclick="send_email({{quote.pk}})">
+                <a href="#"data-toggle="tooltip" data-placement="top" title="Send as Email" onclick="send_email({{quote.pk}})">
                     <i class="fa fa-envelope" aria-hidden="true"></i>
                 </a>        
                 <a  href={% url 'qoute-detail' quote.pk %}  data-toggle="tooltip" data-placement="top" title="Download"> <i class="fa fa-download" aria-hidden="true"></i></a>

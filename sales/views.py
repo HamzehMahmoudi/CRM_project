@@ -1,4 +1,3 @@
-import organization
 from sales.tasks import send_email_task
 from django.shortcuts import render, redirect
 from .models import Quote, QuoteItem
@@ -10,6 +9,7 @@ from .tasks import send_email_task
 from organization import models
 from django.forms import formset_factory
 from .forms import QuoteitemForm
+from django.contrib import messages
 # Create your views here.
 
 
@@ -76,14 +76,20 @@ def create_quote(request, pk):
 @csrf_exempt
 def add_item(request, qid):
     quote = Quote.objects.get(pk=qid)
-    QuoteitemFormset = formset_factory(QuoteitemForm)
+    QuoteitemFormset = formset_factory(QuoteitemForm, extra=3)
     if request.method == 'POST':
         formset = QuoteitemFormset(request.POST)
         if formset.is_valid():
             for form in formset:
                 form.save(commit=False).quote = quote
                 form.save()
+        if not quote.quoteitem_set.all():
+            quote.delete()
+        messages.info(
+            request, "item added")
         return redirect('add-item', qid=quote.pk)
     else:
         formset = QuoteitemFormset()
+        formset.empty_form.base_fields["product"].queryset = quote.organization.get_org_product(            # user only can chose related products
+        ).product_set.all()
         return render(request, 'sales/add_quote.html', {"formset": formset})

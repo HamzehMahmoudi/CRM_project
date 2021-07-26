@@ -29,7 +29,7 @@ class Product(models.Model):
         "catalogue (only img)"), upload_to="img/", max_length=300)
     technical_info = models.TextField(verbose_name=_("technical information"))
     related_product = models.ManyToManyField(
-        OrganizationProduct, verbose_name=_("related product"))
+        OrganizationProduct, verbose_name=_("related product"), blank=True)
 
     def __str__(self):
         return f"{self.name}"

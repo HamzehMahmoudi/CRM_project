@@ -58,9 +58,22 @@
             </select>
         </li>
       </ul> 
-
     </div>
   </nav>
+
+      <div class="row mt-3 mb-3 container_fluid">
+        <div class="col-12">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info alert-dismissible">
+                        {{ message }}
+                        <button type="button" data-dismiss="alert" class="close">&times;</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
   <div class="container-lg">
     {% block body %}
     {% endblock body %}

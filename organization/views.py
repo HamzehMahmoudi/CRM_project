@@ -42,3 +42,8 @@ class OrgDetail(generic.DetailView):
             return super().get(request, *args, **kwargs)
         else:
             raise PermissionDenied
+
+
+class ProductList(generic.ListView):
+    model = models.Product
+    paginate_by = 10

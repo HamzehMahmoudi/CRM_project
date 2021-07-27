@@ -23,11 +23,14 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'organlist' %}">organization list</a>
+          <a class="nav-link" href="{% url 'organlist' %}">Organization list</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'quotelist' %}">Qoutlist</a>
+          <a class="nav-link" href="{% url 'quotelist' %}">Qoute list</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'product-list' %}">Product list</a>
+        </li>        
       </ul>
       <ul class="navbar-nav my-2 mr-5 my-lg-0">
         {% if user.is_authenticated %}

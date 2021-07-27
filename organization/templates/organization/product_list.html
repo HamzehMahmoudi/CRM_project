@@ -1,0 +1,30 @@
+{% extends 'users/base.html' %}
+{% load i18n %}
+{% block body %}
+    <table style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif" class="table table-bordered table-striped {% if bidi == rtl %}rtl{% endif %}">
+        <h1 class="text-success rtl ">
+        </h1>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{% trans "Product" %}</th>
+                <th>{% trans "Price" %}</th>
+                <th>{% trans "Taxable" %}</th>
+                <th>{% trans "catalogue" %}</th>
+            </tr>
+        </thead>
+        {% for p in page_obj %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ p.name}}</td>
+            <td>{{p.price}}</td>
+            <td>{% if p.taxable %}<i class="fas fa-check"></i>{% else %}<i class="fas fa-ban"></i>{% endif %}</td>
+            <td class="d-flex justify-content-around" >
+                <a href="{{p.img_catalogue.url}}"><i class="fas fa-image"></i></a>
+                <a href="{{p.pdf_catalogue.url}}"><i class="fas fa-file-pdf"></i></a>
+
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endblock body %}

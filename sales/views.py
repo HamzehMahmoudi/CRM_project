@@ -1,4 +1,5 @@
 from django import views
+from django.core.exceptions import PermissionDenied
 from django.db.models.fields import mixins
 from django.http.response import JsonResponse
 import organization
@@ -51,17 +52,20 @@ class QuoteDetail(mixins.LoginRequiredMixin, generic.DetailView):
     template_name = 'sales/quotedetail.html'
 
     def get(self, request, *args, **kwargs):
-        if self.request.GET.get('act') == 'download':
-            # download the file
-            g = super().get(request, *args, **kwargs)
-            rendered_content = g.rendered_content
-            pdf = weasyprint.HTML(string=rendered_content,
-                                  base_url="http://127.0.0.1:8000").write_pdf()
-            response = HttpResponse(pdf, content_type="application/pdf")
-            return response
+        if request.user != self.get_object().user:
+            raise PermissionDenied
         else:
-            # return html response when user click on eye icon
-            return super().get(request, *args, **kwargs)
+            if self.request.GET.get('act') == 'download':
+                # download the file
+                g = super().get(request, *args, **kwargs)
+                rendered_content = g.rendered_content
+                pdf = weasyprint.HTML(string=rendered_content,
+                                        base_url="http://127.0.0.1:8000").write_pdf()
+                response = HttpResponse(pdf, content_type="application/pdf")
+                return response
+            else:
+                # return html response when user click on eye icon
+                return super().get(request, *args, **kwargs)
 
 
 @decorators.login_required
@@ -79,6 +83,7 @@ def delete_quote_item(request, pk):
     return redirect("quote-detail", pk=qpk)
 
 
+@decorators.login_required
 @csrf_exempt
 def add_item(request, qid):
     """
@@ -104,6 +109,7 @@ def add_item(request, qid):
         return render(request, 'sales/add_quote.html', {"formset": formset})
 
 
+@decorators.login_required
 def add_follow_up(request, orgid):
     organ = models.Organization.objects.get(pk=orgid)
     if request.method == 'POST':
@@ -119,6 +125,7 @@ def add_follow_up(request, orgid):
         return render(request, 'sales/add_followup.html', {"form": form})
 
 
+@decorators.login_required
 def show_followup(request):
     orgid = request.GET.get("orgid")
     organ = models.Organization.objects.get(pk=orgid)

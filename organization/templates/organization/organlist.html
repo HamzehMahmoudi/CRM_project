@@ -19,7 +19,9 @@
             <td>{{ org.name}}</td>
             <td>{{org.creator.username}}</td>
             <td >{{org.agent}}</td>
-            <td><a href="{% url 'add-followup' org.pk %}"><i class="fas fa-bullhorn"></i></a></td>
+            <td  class="d-flex justify-content-around" ><a href="{% url 'add-followup' org.pk %}"><i class="fas fa-bullhorn"></i></a>
+                <a  href="{% url "orgdetail" org.pk %}" data-toggle="tooltip" data-placement="top" title="View"> <i class="fa fa-eye" aria-hidden="true"></i></a>
+            </td>
         </tr>
         {% endfor %}
     </table>

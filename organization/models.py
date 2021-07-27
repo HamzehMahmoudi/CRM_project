@@ -1,4 +1,4 @@
-import organization
+from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib.auth import get_user_model
@@ -6,6 +6,9 @@ from django.core.validators import FileExtensionValidator
 # Create your models here.
 
 User = get_user_model()
+
+validator = RegexValidator(
+    regex="^09\d{9}$", message="invalid phone number")
 
 
 class OrganizationProduct(models.Model):
@@ -45,7 +48,7 @@ class Organization(models.Model):
     agent = models.CharField(max_length=50, null=False,
                              blank=False, verbose_name=_("Organization agent"))
     agent_phone = models.CharField(max_length=11, null=False,
-                                   blank=False, verbose_name=_("agent Phone number"))
+                                   blank=False, verbose_name=_("Agent Phone number"), validators=[validator, ])
     registered_on = models.DateTimeField(
         auto_now_add=True, verbose_name=_("Registered at"))
     products = models.ManyToManyField(

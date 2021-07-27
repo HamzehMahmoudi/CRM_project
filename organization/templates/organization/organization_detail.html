@@ -1,4 +1,5 @@
 {% extends 'users/base.html' %}
+{% load i18n %}
 {% block title %}{{object.name}}{% endblock title %}
 {% block body %}
 <div class="card" style="width:100% ;">
@@ -39,21 +40,52 @@
                         <div class="card-body">
                             <h4 class="card-title"><strong>{{product.name}}</strong></h4>
                             <h5><strong>price : {{product.price}} $</strong><h6>
-                            <a class='btn btn-success' href="">add to quote</a>
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
-    <br>
+    <hr>
+    <div id="followup">
+    </div>
     <hr>
     <a href="{% url 'create-quote' object.id %}" class="btn btn-success">Create Quote </a>
-    <a href="#" class="card-link">Another link</a>
+    <a href="#followup" class="btn btn-secondary" onclick="get_followup({{object.id}});">see follow up</a>
     <div class ="text-right">
         <p>regestered by : {{object.creator}}</p>
     </div>
  </div>
-
 </div> 
 
+{% block script %}
+<script>
+    function get_followup(orgid) {
+            var ajax_config = {
+                url: "{% url 'showfollowuo' %}",
+                data: {
+                    "orgid" : orgid 
+                },
+                method: 'GET',
+                success: function (response) {
+                    var my_output_div = $('#followup');
+                    var table = "";
+                    $(response.result).each(function (index, obj) {
+                        console.log(obj);
+                        var my_table = '<tr><td>' + obj.creator + '</td><td>' + obj.written_on + '</td><td>' + obj.report + '</td></tr>';
+                        table = table + my_table;
+                    });
+                    if (my_output_div.is(':empty')) {
+                        final_table = '<h1 class="card-title ">Follow Up</h1><table class="table table-bordered table-striped" ><thead><tr><th>{% trans "user" %}</th><th>{% trans "date" %}</th><th>{% trans "report" %}</th></tr></thead><tbody>' + table + '</tbody></table>';
+                        my_output_div.append(final_table);
+                    } else {
+                        my_output_div.empty();
+                        final_table = '<h1 class="card-title ">Follow Up</h1><table class="table table-bordered table-striped" ><thead><tr><th>{% trans "user" %}</th><th>{% trans "date" %}</th><th>{% trans "report" %}</th></tr></thead><tbody>' + table + '</tbody></table>';
+                        my_output_div.append(final_table);
+                        }
+                    }
+            }
+            $.ajax(ajax_config);
+        }
+</script>
+{% endblock %}
 {% endblock body %}

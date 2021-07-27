@@ -30,7 +30,7 @@ class Quote(models.Model):
     def __str__(self):
         return f"{self.organization} by {self.user}"
 
-    def clean_list(self):
+    def clean_list(self):  # delete quotes that doesnt have any item
         items = self.quoteitem_set.all()
         if items.count() == 0:
             self.delete()

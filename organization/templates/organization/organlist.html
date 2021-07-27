@@ -19,7 +19,7 @@
             <td>{{ org.name}}</td>
             <td>{{org.creator.username}}</td>
             <td >{{org.agent}}</td>
-            <td><a href=""><i class="fas fa-bullhorn"></i></a></td>
+            <td><a href="{% url 'add-followup' org.pk %}"><i class="fas fa-bullhorn"></i></a></td>
         </tr>
         {% endfor %}
     </table>

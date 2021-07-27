@@ -7,3 +7,9 @@ class QuoteitemForm(forms.ModelForm):
         model = models.QuoteItem
         exclude = ['quote', 'created_on']
         fields = ['product', 'qty', 'discount']
+
+
+class FollowUpForm(forms.ModelForm):
+    class Meta:
+        model = models.FollowUp
+        exclude = ['organization', 'creator']

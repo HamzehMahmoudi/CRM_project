@@ -10,5 +10,7 @@ urlpatterns = [
     path("quote-create/<int:pk>", views.create_quote, name="create-quote"),
     path("quote-item-add/<int:qid>", views.add_item, name="add-item"),
     path("quote-item-delete/<int:pk>",
-         views.delete_quote_item, name="delete-item")
+         views.delete_quote_item, name="delete-item"),
+    path("add-followup/<int:orgid>", views.add_follow_up, name="add-followup"),
+    path("show-followup",views.show_followup, name="showfollowuo"),
 ]

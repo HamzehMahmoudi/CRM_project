@@ -11,11 +11,9 @@ User = get_user_model()
 class OrganizationProduct(models.Model):
     """ product that company produce"""
     name = models.CharField(verbose_name=_("Product name"), max_length=50)
-    organization = models.ForeignKey("organization.Organization", verbose_name=_(
-        "organization"), on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.name} of {self.organization}"
+        return f"{self.name}"
 
 
 class Product(models.Model):
@@ -50,14 +48,16 @@ class Organization(models.Model):
                                    blank=False, verbose_name=_("agent Phone number"))
     registered_on = models.DateTimeField(
         auto_now_add=True, verbose_name=_("Registered at"))
-    product = models.CharField(_("Organization product"), max_length=50)
+    products = models.ManyToManyField(
+        OrganizationProduct, verbose_name=_("products"))
     creator = models.ForeignKey(
         User, verbose_name=_("added by"), on_delete=models.PROTECT)
     workers = models.IntegerField(verbose_name=_(
         "workers qty"), blank=True, null=True)
 
-    def get_org_product(self):
-        return OrganizationProduct.objects.get(name=self.product)
+    def get_related_product(self):
+        products = self.products.all()
+        return Product.objects.filter(related_product__in=products)
 
     def __str__(self):
         return f'{self.name}-{self.province}'

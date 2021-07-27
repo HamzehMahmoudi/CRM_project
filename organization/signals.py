@@ -4,9 +4,9 @@ from . import models
 import organization
 
 
-@receiver(post_save, sender=models.Organization)
-def create_orgproduct(sender, instance, created, **kwargs):
-    if created:
-        models.OrganizationProduct(
-            name=instance.product, organization=instance).save()
-        print("done")
+# @receiver(post_save, sender=models.Organization)
+# def create_orgproduct(sender, instance, created, **kwargs):
+#     if created:
+#         models.OrganizationProduct(
+#             name=instance.product, organization=instance).save()
+#         print("done")

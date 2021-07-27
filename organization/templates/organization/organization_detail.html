@@ -34,7 +34,7 @@
     <br>
     <h1 class="card-title ">Related product</h1>
         <div class="row mb-4 mt-4">
-            {% for product in object.get_org_product.product_set.all %}
+            {% for product in object.get_related_product %}
                 <div class="col-3 mb-2">
                     <div class="card">
                         <div class="card-body">

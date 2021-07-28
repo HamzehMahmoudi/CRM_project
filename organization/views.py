@@ -4,6 +4,9 @@ from django.shortcuts import redirect, render
 from django.views import generic
 from .forms import OrganForm
 from django.core.exceptions import PermissionDenied
+from rest_framework.generics import ListAPIView
+from .serializers import OrganSerializar
+from rest_framework.exceptions import NotAuthenticated
 
 
 class CreateOragan(generic.CreateView):
@@ -47,3 +50,13 @@ class OrgDetail(generic.DetailView):
 class ProductList(generic.ListView):
     model = models.Product
     paginate_by = 10
+
+
+class OrganizationListApi(ListAPIView):
+    serializer_class = OrganSerializar
+
+    def get_queryset(self):
+        if self.request.user.is_anonymous:
+            raise NotAuthenticated("You need to Login")
+        else:
+            return models.Organization.objects.filter(creator=self.request.user)

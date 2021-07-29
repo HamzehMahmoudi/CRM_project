@@ -51,6 +51,8 @@
     <hr>
     <a href="{% url 'create-quote' object.id %}" class="btn btn-success">Create Quote </a>
     <a href="#followup" class="btn btn-secondary" onclick="get_followup({{object.id}});">see follow up</a>
+    <a href="{% url 'orgedit' object.id %}" class="btn btn-primary">Edit</a>
+    
     <div class ="text-right">
         <p>regestered by : {{object.creator}}</p>
     </div>

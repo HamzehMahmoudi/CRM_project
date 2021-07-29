@@ -8,6 +8,8 @@ from rest_framework.generics import ListAPIView
 from .serializers import OrganSerializar
 from rest_framework.exceptions import NotAuthenticated
 
+import organization
+
 
 class CreateOragan(generic.CreateView):
     """
@@ -45,6 +47,16 @@ class OrgDetail(generic.DetailView):
             return super().get(request, *args, **kwargs)
         else:
             raise PermissionDenied
+
+
+class OrgUpdate(generic.UpdateView):
+    model = models.Organization
+    form_class = OrganForm
+    template_name = "organization/organ_edit.html"
+
+    def form_valid(self, form):
+        form.save()
+        return redirect("orgdetail", pk=self.get_object().pk)
 
 
 class ProductList(generic.ListView):

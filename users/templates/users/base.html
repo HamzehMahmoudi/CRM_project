@@ -23,13 +23,13 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'organlist' %}">Organization list</a>
+          <a class="nav-link" href="{% url 'organlist' %}"> Organization list</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'quotelist' %}">Qoute list</a>
+          <a class="nav-link" href="{% url 'quotelist' %}"> Qoute list</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'product-list' %}">Product list</a>
+          <a class="nav-link" href="{% url 'product-list' %}"> Product list</a>
         </li>        
       </ul>
       <ul class="navbar-nav my-2 mr-5 my-lg-0">
@@ -44,9 +44,7 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'login' %}">Login<span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'register' %}">Register</a>
-        </li>
+
         {% endif %}
         <li> <!-- change language -->
             <select name="language" class="custom-select" id = "lang" style="width:70px">

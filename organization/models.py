@@ -60,7 +60,7 @@ class Organization(models.Model):
 
     def get_related_product(self):
         products = self.products.all()
-        return Product.objects.filter(related_product__in=products)
+        return Product.objects.filter(related_product__in=products).distinct()
 
     def __str__(self):
         return f'{self.name}-{self.province}'

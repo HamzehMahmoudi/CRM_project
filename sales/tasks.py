@@ -1,7 +1,8 @@
 from celery import shared_task
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
-from .models import Quote, EmailHistory
+from .models import EmailHistory
+from quote.models import Quote
 from .enums import EmailStatus
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string

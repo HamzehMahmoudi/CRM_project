@@ -24,9 +24,8 @@ class QuoteList(mixins.LoginRequiredMixin, generic.ListView):
     paginate_by = 10
 
     def get_queryset(self):  # delete empty Quotes
+        Quote.clean_list()
         qs = Quote.objects.filter(user=self.request.user)
-        for q in qs:
-            q.clean_list()
         return qs
 
 
@@ -61,8 +60,9 @@ def create_quote(request, pk):
     organ = models.Organization.objects.get(pk=pk)
     quote = Quote.objects.create(organization=organ, user=request.user)
     quote.save()
+    q = Quote.objects.get(pk=quote.pk)
     print(f"quote created with id {quote.pk}")
-    return redirect('add-item', qid=quote.pk)
+    return redirect('add-item', qid=q.pk)
 
 
 def delete_quote_item(request, pk):
@@ -82,9 +82,9 @@ def add_item(request, qid):
     QuoteitemFormset = formset_factory(QuoteitemForm, extra=3)
     if request.method == 'POST':
         formset = QuoteitemFormset(request.POST)
-        for form in formset:
-            if form.is_valid():
-                if not form.fields["qty"] or form.fields["product"]:
+        if formset.is_valid():
+            for form in formset:
+                if not (form.fields["qty"] or form.fields["product"]):  #if form was empty ignore that one  form 
                     continue
                 form.save(commit=False).quote = quote
                 form.save()

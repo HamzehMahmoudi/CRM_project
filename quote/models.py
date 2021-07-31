@@ -20,10 +20,13 @@ class Quote(models.Model):
     def __str__(self):
         return f"{self.organization} by {self.user}"
 
-    def clean_list(self):  # delete quotes that doesnt have any item
-        items = self.quoteitem_set.all()
-        if items.count() == 0:
-            self.delete()
+    @staticmethod
+    def clean_list():
+        qouts = Quote.objects.all()
+        for q in qouts:             # delete quotes that doesnt have any item
+            items = q.quoteitem_set.all()
+            if items.count() == 0:
+                q.delete()
 
 
 class QuoteItem(models.Model):

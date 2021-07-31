@@ -1,5 +1,6 @@
 {% extends 'users/base.html' %}
 {% load i18n %}
+{% block title %}{% trans "Product list" %}{% endblock title %}
 {% block body %}
     <table style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif" class="table table-bordered table-striped {% if bidi == rtl %}rtl{% endif %}">
         <h1 class="text-success rtl ">

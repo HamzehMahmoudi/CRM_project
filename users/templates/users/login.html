@@ -1,17 +1,17 @@
 {% extends "users/base.html" %}
-{% block title %}Login{% endblock %}
+{% block title %}{% trans "Login" %}{% endblock %}
 {% block body %}
 {% if user.is_authenticated %}
-<p class="h4" style="text-align: center;padding-top:20%">You already logged in as {{user.username}} </p>
-<p class='h6' style="text-align: center"><a href="{%url 'logout'%}">logout</a> from this user first</p>
+<p class="h4" style="text-align: center;padding-top:20%">{% trans "You already logged in as" %} {{user.username}} </p>
+<p class='h6' style="text-align: center"><a href="{%url 'logout'%}">{% trans "logout" %}</a> {% trans "from this user first" %}</p>
 {% else %}
 {% load crispy_forms_tags %}
 <form action="{% url 'login' %}" method="post" style="padding-top:100px;width:400px;height:70%" class="container">
-    <h1 class='display-4' style='text-align:center'> Login </h1>
+    <h1 class='display-4' style='text-align:center'> {% trans "Login" %} </h1>
     {% csrf_token %}
     {{ form|crispy }}
-    <button class='btn btn-primary' type="submit">Login</button>
-    <p>dont have account?? Go talk to your Superior salesman</p>
+    <button class='btn btn-primary' type="submit">{% trans "Login" %}</button>
+    <p>{% trans "dont have account?? Go talk to your Superior salesman" %}</p>
 </form>
 {% endif %}
 

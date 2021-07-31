@@ -14,7 +14,7 @@
 
 <body class="d-flex flex-column h-100">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand ml-5" href="{% url 'index' %}">Home</a>
+    <a class="navbar-brand ml-5" href="{% url 'index' %}">{% trans "Home" %}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -23,13 +23,13 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'organlist' %}"> Organization list</a>
+          <a class="nav-link" href="{% url 'organlist' %}"> {% trans "Organization list" %}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'quotelist' %}"> Qoute list</a>
+          <a class="nav-link" href="{% url 'quotelist' %}"> {% trans "Qoute list" %}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'product-list' %}"> Product list</a>
+          <a class="nav-link" href="{% url 'product-list' %}"> {% trans "Product list" %}</a>
         </li>        
       </ul>
       <ul class="navbar-nav my-2 mr-5 my-lg-0">
@@ -38,11 +38,11 @@
           <a class="nav-link" href=""><span class="sr-only">{(current)}</span>{{user.username}}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout' %}">logout</a>
+          <a class="nav-link" href="{% url 'logout' %}">{% trans "logout" %}</a>
         </li>
         {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'login' %}">Login<span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}<span class="sr-only">(current)</span></a>
         </li>
 
         {% endif %}

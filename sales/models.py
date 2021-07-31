@@ -26,7 +26,7 @@ class EmailHistory(models.Model):
         max_length=20,
         verbose_name=_("status"),
         choices=enums.EmailStatus.choices,
-        default=enums.EmailStatus.SENT,
+        default=enums.EmailStatus.FAILED,
     )
     sender = models.ForeignKey(User, verbose_name=_(
         "from"), on_delete=models.PROTECT)

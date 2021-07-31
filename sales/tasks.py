@@ -23,7 +23,6 @@ def send_email_task(uid, qid):
         msg = EmailMultiAlternatives(subject, text_content, sender, [reciver])
         msg.attach_alternative(html, "text/html")
         msg.send()
-        EmailHistory(sender=user, reciver=quote.organization).save()
+        EmailHistory(sender=user, reciver=quote.organization,status=EmailStatus.SENT).save()
     except:  # if any exception happend create an EmailHistory object and set Status NOt_SEND
-        EmailHistory(sender=user, reciver=quote.organization,
-                     status=EmailStatus.NOT_SEND).save()
+        EmailHistory(sender=user, reciver=quote.organization).save()

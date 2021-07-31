@@ -7,11 +7,10 @@ from django.core.exceptions import PermissionDenied
 from rest_framework.generics import ListAPIView
 from .serializers import OrganSerializar
 from rest_framework.exceptions import NotAuthenticated
+from django.contrib.auth import mixins
 
-import organization
 
-
-class CreateOragan(generic.CreateView):
+class CreateOragan(mixins.LoginRequiredMixin, generic.CreateView):
     """
     salesman can add an organization using this view 
     """
@@ -26,7 +25,7 @@ class CreateOragan(generic.CreateView):
         return redirect('organlist')
 
 
-class Organlist(generic.ListView):
+class Organlist(mixins.LoginRequiredMixin, generic.ListView):
     """
     view to see all organizations together 
     """
@@ -38,7 +37,7 @@ class Organlist(generic.ListView):
         return models.Organization.objects.filter(creator=self.request.user)
 
 
-class OrgDetail(generic.DetailView):
+class OrgDetail(mixins.LoginRequiredMixin, generic.DetailView):
     model = models.Organization
 
     def get(self, request, *args, **kwargs):
@@ -49,7 +48,7 @@ class OrgDetail(generic.DetailView):
             raise PermissionDenied
 
 
-class OrgUpdate(generic.UpdateView):
+class OrgUpdate(mixins.LoginRequiredMixin, generic.UpdateView):
     model = models.Organization
     form_class = OrganForm
     template_name = "organization/organ_edit.html"
@@ -59,12 +58,12 @@ class OrgUpdate(generic.UpdateView):
         return redirect("orgdetail", pk=self.get_object().pk)
 
 
-class ProductList(generic.ListView):
+class ProductList(mixins.LoginRequiredMixin, generic.ListView):
     model = models.Product
     paginate_by = 10
 
 
-class OrganizationListApi(ListAPIView):
+class OrganizationListApi(mixins.LoginRequiredMixin, ListAPIView):
     serializer_class = OrganSerializar
 
     def get_queryset(self):

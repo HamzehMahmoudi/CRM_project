@@ -3,7 +3,7 @@
 {% block body %}
 {% if user.is_authenticated %}
 <p class="h4" style="text-align: center;padding-top:20%">{% trans "You already logged in as" %} {{user.username}} </p>
-<p class='h6' style="text-align: center"><a href="{%url 'logout'%}">{% trans "logout" %}</a> {% trans "from this user first" %}</p>
+<p class='h6' style="text-align: center">{% blocktrans %}<a href="user/logout"> logout </a> from this user first</p>{% endblocktrans %} 
 {% else %}
 {% load crispy_forms_tags %}
 <form action="{% url 'login' %}" method="post" style="padding-top:100px;width:400px;height:70%" class="container">

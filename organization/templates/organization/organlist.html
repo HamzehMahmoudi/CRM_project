@@ -27,4 +27,5 @@
         {% endfor %}
     </table>
     <a href="{% url 'createorgan' %}" class="btn btn-primary"><i class="fas fa-plus"></i> <strong>{% trans "Organization" %}</strong></a>
+    {% include 'organization/paginate.html' %}
 {% endblock body %}

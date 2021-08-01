@@ -3,7 +3,7 @@ from organization.models import Organization, Product
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib.auth import get_user_model
-
+from django.db.models import Sum
 # Create your models here.
 
 User = get_user_model()
@@ -27,6 +27,12 @@ class Quote(models.Model):
             items = q.quoteitem_set.all()
             if items.count() == 0:
                 q.delete()
+
+    def get_total_price(self):
+        return self.quoteitem_set.aggregate(Sum("price")).get("price__sum", 0)
+
+    def get_total_discount(self):
+        return self.quoteitem_set.aggregate(Sum("discount")).get("discount__sum", 0)
 
 
 class QuoteItem(models.Model):

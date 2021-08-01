@@ -28,6 +28,7 @@
         </tr>
         {% endfor %}
     </table>
+    {% include 'organization/paginate.html' %}
     <script>
     function send_email(quote){
             $.ajax({

@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load math %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,11 +20,13 @@
         <thead>
         <tr>
             <th>#</th>
-            <th class = "col-6">{% trans "product" %}</th>
+            <th>{% trans "product" %}</th>
             <th>{% trans "Qty" %}</th>
-            <th>{% trans "fee" %}</th>
-            <th>{% trans "total price" %}</th>
-            <th>{% trans "actions" %}</th>
+            <th>{% trans "Fee" %}</th>
+            <th>{% trans "total price (tax included)" %}</th>
+            <th>{% trans "Discount" %}</th>
+            <th>{% trans "Ultimate Price" %}</th>
+            <th>{% trans "Actions" %}</th>
 
         </tr>
         </thead>
@@ -33,7 +36,9 @@
                 <td>{{ item.product.name}}</td>
                 <td>{{ item.qty }}</td>
                 <td>{{ item.product.price }} $</td>
-                <td>{{ item.get_total }} $</td>
+                <td>{{ item.price }} $</td>
+                <td>{{ item.discount }} $</td>
+                <td>{{ item.price|sub:item.discount}} $</td>
                 <td>
                     <a href="{% url "delete-item" item.pk %}" >
                         <i class="fas fa-trash-alt"></i>
@@ -44,10 +49,13 @@
  <tfoot>
     <tr>
         <td colspan="3">
-            
+           {% trans "You save " %} : {{object.get_total_discount}} $
         </td>
         <td colspan="2">
-            {% trans "total price" %} : 
+            {% trans "price" %} : {{object.get_total_price}} $
+        </td>
+        <td colspan="2">
+            {% trans "You will pay" %} : {{object.get_total_price|sub:object.get_total_discount}} $
         </td>
     </tr>
     </tfoot>        

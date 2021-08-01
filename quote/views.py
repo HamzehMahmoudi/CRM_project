@@ -13,6 +13,9 @@ from django.views.decorators.csrf import csrf_exempt
 from organization import models
 from django.contrib import messages
 from django.forms import inlineformset_factory
+from django.views.decorators.clickjacking import xframe_options_sameorigin
+from django.utils.decorators import method_decorator
+
 # Create your views here.
 
 
@@ -30,8 +33,10 @@ class QuoteList(mixins.LoginRequiredMixin, generic.ListView):
         return qs
 
 
+@method_decorator(xframe_options_sameorigin, name='dispatch')
 class QuoteDetail(mixins.LoginRequiredMixin, generic.DetailView):
     """
+
     show quote detail and download quote as PDF
     """
     model = Quote
@@ -92,4 +97,4 @@ def add_item(request, qid):
             messages.info(request, "your selected item added ")
             return redirect('add-item', qid=quote.pk)
     else:
-        return render(request, 'quote/add_quote.html', {"formset": formset})
+        return render(request, 'quote/add_quote.html', {"formset": formset, "qid": qid})

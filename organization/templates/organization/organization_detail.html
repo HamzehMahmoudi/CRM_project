@@ -73,7 +73,7 @@
                     var table = "";
                     $(response.result).each(function (index, obj) {
                         console.log(obj);
-                        var my_table = '<tr><td>' + obj.creator + '</td><td>' + obj.written_on + '</td><td>' + obj.report + '</td></tr>';
+                        var my_table = '<tr><td>' + obj.creator + '</td><td>' + obj.written_on.split(' ')[0] + '</td><td>' + obj.report + '</td></tr>';
                         table = table + my_table;
                     });
                     if (my_output_div.is(':empty')) {

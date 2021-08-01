@@ -36,13 +36,18 @@ class QuoteItem(models.Model):
     quote = models.ForeignKey(
         Quote, verbose_name=_("quote"), on_delete=models.CASCADE)
     discount = models.IntegerField(verbose_name=_("discount"), default=0)
+    price = models.IntegerField(_("price"), default=0)
 
     def __str__(self):
         return f"{self.qty} of {self.product}"
 
-    def get_total(self):
+    def get_price(self):
         tax = 0
         if self.product.taxable:
             tax = (self.qty * self.product.price) * (9 / 100)
 
-        return (self.qty * self.product.price) + tax - self.discount
+        return (self.qty * self.product.price) + tax
+
+    def save(self, *args, **kwargs):
+        self.price = self.get_price()
+        super(QuoteItem, self).save()

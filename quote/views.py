@@ -1,5 +1,7 @@
+from django import forms
 from django.core.exceptions import PermissionDenied
 from django.db.models.fields import mixins
+from django.forms.models import inlineformset_factory
 from django.http.response import Http404
 from django.shortcuts import render, redirect
 from .models import Quote, QuoteItem
@@ -9,9 +11,8 @@ import weasyprint
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from organization import models
-from django.forms import formset_factory
-from .forms import QuoteitemForm
 from django.contrib import messages
+from django.forms import inlineformset_factory
 # Create your views here.
 
 
@@ -79,21 +80,16 @@ def add_item(request, qid):
     add item to Quote
     """
     quote = Quote.objects.get(pk=qid)
-    QuoteitemFormset = formset_factory(QuoteitemForm, extra=3)
+    QouteFormSet = inlineformset_factory(
+        Quote, QuoteItem, fields=('product', 'qty', 'discount'), can_delete=False)
+    formset = QouteFormSet(queryset=QuoteItem.objects.none(), instance=quote)
+    formset.empty_form.base_fields["product"].queryset = quote.organization.get_related_product(
+    )
     if request.method == 'POST':
-        formset = QuoteitemFormset(request.POST)
+        formset = QouteFormSet(request.POST, instance=quote)
         if formset.is_valid():
-            for form in formset:
-                if not (form.fields["qty"] or form.fields["product"]):  #if form was empty ignore that one  form 
-                    continue
-                form.save(commit=False).quote = quote
-                form.save()
-        messages.info(
-            request, "yourselected item added ")
-        return redirect('add-item', qid=quote.pk)
+            formset.save()
+            messages.info(request, "your selected item added ")
+            return redirect('add-item', qid=quote.pk)
     else:
-        formset = QuoteitemFormset()
-        # user only can chose related products
-        formset.empty_form.base_fields["product"].queryset = quote.organization.get_related_product(
-        )
         return render(request, 'quote/add_quote.html', {"formset": formset})

@@ -95,6 +95,9 @@ def add_item(request, qid):
         if formset.is_valid():
             formset.save()
             messages.info(request, "your selected item added ")
+            quote.merge_items()
             return redirect('add-item', qid=quote.pk)
     else:
         return render(request, 'quote/add_quote.html', {"formset": formset, "qid": qid})
+
+

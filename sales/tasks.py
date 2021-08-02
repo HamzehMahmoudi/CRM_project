@@ -14,15 +14,18 @@ def send_email_task(uid, qid):
     try:
         user = get_user_model().objects.get(pk=uid)
         quote = Quote.objects.get(id=qid)
-        subject = 'this is your Quote'
+        subject = f'this is {user.username} from <our company name>. i have special offer for you !!'
         context = {"object": quote}
-        html = render_to_string('sales/quotedetail.html', context=context)
+        html = render_to_string('sales/email.html', context=context)
         text_content = strip_tags(html)
         sender = settings.EMAIL_HOST_USER
         reciver = quote.organization.email
         msg = EmailMultiAlternatives(subject, text_content, sender, [reciver])
         msg.attach_alternative(html, "text/html")
         msg.send()
-        EmailHistory(sender=user, reciver=quote.organization,status=EmailStatus.SENT).save()
+        EmailHistory.objects.create(sender=user, reciver=quote.organization,
+                                    status=EmailStatus.SENT)
+        return "email sent"
     except:  # if any exception happend create an EmailHistory object and set Status NOt_SEND
-        EmailHistory(sender=user, reciver=quote.organization).save()
+        EmailHistory.objects.create(sender=user, reciver=quote.organization)
+        return "failed"

@@ -1,4 +1,3 @@
-from django import forms
 from django.core.exceptions import PermissionDenied
 from django.db.models.fields import mixins
 from django.forms.models import inlineformset_factory
@@ -10,7 +9,7 @@ from django.contrib.auth import mixins, decorators
 import weasyprint
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from organization import models
+from organization import models as orgmodel
 from django.contrib import messages
 from django.forms import inlineformset_factory
 from django.views.decorators.clickjacking import xframe_options_sameorigin
@@ -63,7 +62,7 @@ class QuoteDetail(mixins.LoginRequiredMixin, generic.DetailView):
 
 @decorators.login_required
 def create_quote(request, pk):
-    organ = models.Organization.objects.get(pk=pk)
+    organ = orgmodel.Organization.objects.get(pk=pk)
     quote = Quote.objects.create(organization=organ, user=request.user)
     quote.save()
     q = Quote.objects.get(pk=quote.pk)
@@ -101,3 +100,10 @@ def add_item(request, qid):
         return render(request, 'quote/add_quote.html', {"formset": formset, "qid": qid})
 
 
+class SelectOrgan(mixins.LoginRequiredMixin, generic.ListView):
+    model = orgmodel.Organization
+    paginate_by = 10
+    template_name = "quote/select_organization.html"
+
+    def get_queryset(self):
+        return orgmodel.Organization.objects.filter(creator=self.request.user)

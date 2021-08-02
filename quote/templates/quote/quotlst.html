@@ -28,6 +28,7 @@
         </tr>
         {% endfor %}
     </table>
+    <a class="btn btn-primary" href="{% url 'select-organ' %}"><i class="fas fa-plus"></i> <strong>{% trans "Qoute" %}</strong></a>
     {% include 'organization/paginate.html' %}
     <script>
     function send_email(quote){

@@ -3,9 +3,9 @@
 {% block title %}{% trans "Qoute" %}{% endblock %}
 {% block body %}
 {% load crispy_forms_tags %}
-<div >
-<iframe style="width:100%;height: 300px;" src="{% url 'quote-detail' qid %}" title="your quote "></iframe>
-</div>
+<h1 class='display-4' style='text-align:center'> {% trans "Add items" %} </h1>
+<br>
+<br>
 <div class="row">
 <div class='col-7'>
 <form method="post" enctype="multipart/form-data">
@@ -28,12 +28,29 @@
                 {% blocktrans %}fill this forms then click on <strong>"add and continue"</strong> button to add entered items 
                 clicking on <strong>"add and continue"</strong> button will show you new set of form to fill 
                 if you want add more do this again otherwise you can click on <strong>"Done"</strong> button to 
-                finnish the procces and redirect to quote list.{% endblocktrans %}
+                finnish the procces and redirect to quote list. clicking on <strong>"see quote"</strong> button show you current quote{% endblocktrans %}
                 </h6>
         </div>
     </div>
 </div>    
 <a class="btn btn-success float-right"href="{% url 'quotelist' %}"> {% trans "Done" %} </a>
+<a class="btn btn-secondary"href="#livequote" style="margin-top: 10px;" id="live-btn" onclick="showLiveQuote()" > {% trans "see quote" %} </a>
 
+<div class="embed-responsive embed-responsive-16by9" style="display: none;" id="livequote">
+<iframe class="embed-responsive-item" src="{% url 'quote-detail' qid %}" title="your quote "></iframe>
+</div>
+<script>
+  function showLiveQuote() {
+    var iframe = document.getElementById("livequote");
+    var btn =  document.getElementById("live-btn") ; 
+    if (iframe.style.display === "none") {
+      iframe.style.display = "block";
+      btn.innerHTML="close" ; 
+    } else {
+      iframe.style.display = "none";
+      btn.innerHTML="see quote";
+    }
+  }
 
+</script>
 {% endblock %}

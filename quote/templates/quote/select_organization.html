@@ -1,0 +1,26 @@
+{% extends 'users/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Organization list" %}{% endblock title %}
+{% block body %}
+    <table style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif" class="table table-bordered table-striped {% if bidi == rtl %}rtl{% endif %}">
+        <h1 class="display-4">select an organization</h1>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{% trans "organization" %}</th>
+                <th>{% trans "added by" %}</th>
+                <th>{% trans "Agent" %}</th>
+            </tr>
+        </thead>
+        {% for org in page_obj %}
+        <tr>
+            <td><a href="{% url 'create-quote' org.pk %}"> {{ forloop.counter }}</a></td>
+           <td><a href="{% url 'create-quote' org.pk %}"> {{ org.name}} </a> </td>
+            <td>{{org.creator.username}}</td>
+            <td >{{org.agent}}</td>
+            
+        </tr>
+        {% endfor %}
+    </table>
+    {% include 'organization/paginate.html' %}
+{% endblock body %}

@@ -9,4 +9,5 @@ urlpatterns = [
     path("item-add/<int:qid>", views.add_item, name="add-item"),
     path("item-delete/<int:pk>",
          views.delete_quote_item, name="delete-item"),
+    path("select-organ", views.SelectOrgan.as_view(), name="select-organ")
 ]

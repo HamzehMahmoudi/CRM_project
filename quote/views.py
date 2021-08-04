@@ -62,12 +62,15 @@ class QuoteDetail(mixins.LoginRequiredMixin, generic.DetailView):
 
 @decorators.login_required
 def create_quote(request, pk):
-    organ = orgmodel.Organization.objects.get(pk=pk)
-    quote = Quote.objects.create(organization=organ, user=request.user)
-    quote.save()
-    q = Quote.objects.get(pk=quote.pk)
-    print(f"quote created with id {quote.pk}")
-    return redirect('add-item', qid=q.pk)
+    try:
+        organ = orgmodel.Organization.objects.get(pk=pk)
+        quote = Quote.objects.create(organization=organ, user=request.user)
+        quote.save()
+        q = Quote.objects.get(pk=quote.pk)
+        print(f"quote created with id {quote.pk}")
+        return redirect('add-item', qid=q.pk)
+    except orgmodel.Organization.DoesNotExist:
+        raise Http404("Organization not found")
 
 
 def delete_quote_item(request, pk):
@@ -83,21 +86,25 @@ def add_item(request, qid):
     """
     add item to Quote
     """
-    quote = Quote.objects.get(pk=qid)
-    QouteFormSet = inlineformset_factory(
-        Quote, QuoteItem, fields=('product', 'qty', 'discount'), can_delete=False)
-    formset = QouteFormSet(queryset=QuoteItem.objects.none(), instance=quote)
-    formset.empty_form.base_fields["product"].queryset = quote.organization.get_related_product(
-    )
-    if request.method == 'POST':
-        formset = QouteFormSet(request.POST, instance=quote)
-        if formset.is_valid():
-            formset.save()
-            messages.info(request, "your selected item added ")
-            quote.merge_items()
-            return redirect('add-item', qid=quote.pk)
-    else:
-        return render(request, 'quote/add_quote.html', {"formset": formset, "qid": qid})
+    try:
+        quote = Quote.objects.get(pk=qid)
+        QouteFormSet = inlineformset_factory(
+            Quote, QuoteItem, fields=('product', 'qty', 'discount'), can_delete=False)
+        formset = QouteFormSet(
+            queryset=QuoteItem.objects.none(), instance=quote)
+        formset.empty_form.base_fields["product"].queryset = quote.organization.get_related_product(
+        )
+        if request.method == 'POST':
+            formset = QouteFormSet(request.POST, instance=quote)
+            if formset.is_valid():
+                formset.save()
+                messages.info(request, "your selected item added ")
+                quote.merge_items()
+                return redirect('add-item', qid=quote.pk)
+        else:
+            return render(request, 'quote/add_quote.html', {"formset": formset, "qid": qid})
+    except Quote.DoesNotExist:
+        raise Http404("Quote not found")
 
 
 class SelectOrgan(mixins.LoginRequiredMixin, generic.ListView):

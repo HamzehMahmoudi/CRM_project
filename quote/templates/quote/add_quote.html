@@ -36,8 +36,8 @@
 <a class="btn btn-success float-right"href="{% url 'quotelist' %}"> {% trans "Done" %} </a>
 <a class="btn btn-secondary"href="#livequote" style="margin-top: 10px;" id="live-btn" onclick="showLiveQuote()" > {% trans "see quote" %} </a>
 
-<div class="embed-responsive embed-responsive-16by9" style="display: none;" id="livequote">
-<iframe class="embed-responsive-item" src="{% url 'quote-detail' qid %}" title="your quote "></iframe>
+<div class="embed-responsive embed-responsive-16by9" style="display: none;"  id="livequote">
+<iframe class="embed-responsive-item" src="{% url 'quote-detail' qid %}#qoute-table" title="your quote "></iframe>
 </div>
 <script>
   function showLiveQuote() {

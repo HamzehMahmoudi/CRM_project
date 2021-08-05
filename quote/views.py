@@ -14,6 +14,7 @@ from django.contrib import messages
 from django.forms import inlineformset_factory
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.utils.decorators import method_decorator
+from .forms import QuoteItemForm
 
 # Create your views here.
 
@@ -81,7 +82,6 @@ def delete_quote_item(request, pk):
 
 
 @decorators.login_required
-@csrf_exempt
 def add_item(request, qid):
     """
     add item to Quote
@@ -114,3 +114,19 @@ class SelectOrgan(mixins.LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         return orgmodel.Organization.objects.filter(creator=self.request.user)
+
+
+class QuoteItemUpdate(mixins.LoginRequiredMixin, generic.UpdateView):
+    model = QuoteItem
+    form_class = QuoteItemForm
+    template_name = "quote/edit_item.html"
+
+    def form_valid(self, form):
+        form.save()
+        return redirect("quote-detail", self.get_object().quote.pk)
+
+    def get(self, *args, **kwargs):
+        if self.request.user != self.get_object().quote.user:
+            raise PermissionDenied
+        else:
+            return super().get(*args, **kwargs)

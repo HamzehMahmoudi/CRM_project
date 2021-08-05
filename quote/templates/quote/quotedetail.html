@@ -40,9 +40,12 @@
                 <td>{{ item.price }} $</td>
                 <td>{{ item.discount }} $</td>
                 <td>{{ item.price|sub:item.discount}} $</td>
-                <td>
+                <td class="d-flex justify-content-around">
                     <a href="{% url "delete-item" item.pk %}" >
                         <i class="fas fa-trash-alt"></i>
+                    </a>
+                    <a href="{% url "edit-item" item.pk %}" >
+                        <i class="fas fa-pen"></i>
                     </a>
                 </td>
             </tr>

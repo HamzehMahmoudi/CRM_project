@@ -5,6 +5,6 @@ from . import views
 urlpatterns = [
     path("send_email", views.email, name="email"),
     path("quotes/", include("quote.urls")),
-    path("add-followup/<int:orgid>", views.add_follow_up, name="add-followup"),
-    path("show-followup", views.show_followup, name="showfollowuo"),
+    path("show-followup", views.show_followup, name="showfollowup"),
+    path("create-followup", views.create_followup, name="create-followup"),
 ]

@@ -1,5 +1,6 @@
 {% extends 'users/base.html' %}
 {% load i18n %}
+{% load crispy_forms_tags %}
 {% block title %}{{object.name}}{% endblock title %}
 {% block body %}
 <div class="card" style="width:100% ;">
@@ -46,8 +47,15 @@
             {% endfor %}
         </div>
     <hr>
+    <h1 class="card-title ">Follow Up</h1>
     <div id="followup">
+       
     </div>
+     <form method="post" enctype="multipart/form-data" id ="report">
+            {% csrf_token %}
+            {{ form|crispy}}
+        </form>
+        <button type="submit" class='btn btn-primary float-center' onclick="create_followup({{object.pk}})">{% trans "add" %}</button>
     <hr>
     <a href="{% url 'create-quote' object.id %}" class="btn btn-success">{% trans "Create Quote" %} </a>
     <a href="#followup" class="btn btn-secondary" onclick="get_followup({{object.id}});">{% trans "see followup" %}</a>
@@ -63,7 +71,7 @@
 <script>
     function get_followup(orgid) {
             var ajax_config = {
-                url: "{% url 'showfollowuo' %}",
+                url: "{% url 'showfollowup' %}",
                 data: {
                     "orgid" : orgid 
                 },
@@ -73,21 +81,43 @@
                     var table = "";
                     $(response.result).each(function (index, obj) {
                         console.log(obj);
-                        var my_table = '<tr><td>' + obj.creator + '</td><td>' + obj.written_on.split(' ')[0] + '</td><td>' + obj.report + '</td></tr>';
+                        var my_table = '<tr><td>' +(index+1)+ '</td><td>' + obj.creator + '</td><td>' + obj.written_on.split(' ')[0] + '</td><td>' + obj.report + '</td></tr>';
                         table = table + my_table;
                     });
                     if (my_output_div.is(':empty')) {
-                        final_table = '<h1 class="card-title ">Follow Up</h1><table class="table table-bordered table-striped" ><thead><tr><th>{% trans "user" %}</th><th>{% trans "date" %}</th><th>{% trans "report" %}</th></tr></thead><tbody>' + table + '</tbody></table>';
+                        final_table = '<table class="table table-bordered table-striped" ><thead><tr><th>#</th><th>{% trans "user" %}</th><th>{% trans "date" %}</th><th>{% trans "report" %}</th></tr></thead><tbody>' + table + '</tbody></table>';
                         my_output_div.append(final_table);
                     } else {
                         my_output_div.empty();
-                        final_table = '<h1 class="card-title ">Follow Up</h1><table class="table table-bordered table-striped" ><thead><tr><th>{% trans "user" %}</th><th>{% trans "date" %}</th><th>{% trans "report" %}</th></tr></thead><tbody>' + table + '</tbody></table>';
+                        final_table = '<table class="table table-bordered table-striped" ><thead><tr><th>#</th><th>{% trans "user" %}</th><th>{% trans "date" %}</th><th>{% trans "report" %}</th></tr></thead><tbody>' + table + '</tbody></table>';
                         my_output_div.append(final_table);
                         }
                     }
             }
             $.ajax(ajax_config);
         }
+
+    function create_followup(orgid){
+        var organization = orgid; 
+        var report = $("#id_report").val();
+        ajax_config = {
+            url:"{% url 'create-followup' %}",
+            method: "post",
+            data: {
+                organization:organization,
+                report:report
+            },
+            success: function (response) {
+                    document.getElementById("report").reset();
+                    alert("Saved");
+
+                },
+            error: function (response) {
+                    alert("your follow up didnt saved try again");
+                }
+        };
+        $.ajax(ajax_config);
+    }
 </script>
 {% endblock %}
 {% endblock body %}

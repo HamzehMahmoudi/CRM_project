@@ -1,3 +1,4 @@
+from sales.forms import FollowUpForm
 from django.db.models.fields import related
 from . import models
 from django.shortcuts import redirect, render
@@ -39,6 +40,7 @@ class Organlist(mixins.LoginRequiredMixin, generic.ListView):
 
 class OrgDetail(mixins.LoginRequiredMixin, generic.DetailView):
     model = models.Organization
+    extra_context = {"form": FollowUpForm()}
 
     def get(self, request, *args, **kwargs):
         obj = self.get_object()

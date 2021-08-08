@@ -7,4 +7,5 @@ urlpatterns = [
     path("quotes/", include("quote.urls")),
     path("show-followup", views.show_followup, name="showfollowup"),
     path("create-followup", views.create_followup, name="create-followup"),
+    path("form-followup", views.FollowupFormView.as_view(), name="followup-form")
 ]

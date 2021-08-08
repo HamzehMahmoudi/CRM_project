@@ -9,6 +9,8 @@ from .tasks import send_email_task
 from organization import models
 from django.contrib import messages
 from sales import forms
+from django.views import generic
+from django.contrib.auth import mixins
 
 # Create your views here.
 
@@ -21,12 +23,25 @@ def email(request):  # send email to company
     return redirect('quotelist')
 
 
+class FollowupFormView(mixins.LoginRequiredMixin, generic.TemplateView):
+    """
+    show the followup form 
+    """
+    extra_context = {"form": forms.FollowUpForm()}
+    template_name = "sales/followup_form.html"
+
+    def get(self, *args, **kwargs):
+        orgid = self.request.GET.get("organ")
+        self.extra_context.update({"orgid": orgid})
+        return super().get(self.request, *args, **kwargs)
+
+
 @decorators.login_required
 def show_followup(request):
     orgid = request.GET.get("orgid")
     organ = models.Organization.objects.get(pk=orgid)
     qs = FollowUp.objects.filter(
-        organization=organ, creator=request.user)
+        organization=organ, creator=request.user).order_by("-written_on")
     followups = list(qs.values('creator__username',
                      'written_on__date', 'written_on__time', 'report'))
     return JsonResponse({"result": followups})

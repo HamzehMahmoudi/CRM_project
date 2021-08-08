@@ -1,0 +1,37 @@
+{% extends 'users/base.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block title %}Follow Up Form{% endblock title %}
+{% block body %}
+<h1 class='display-4' style='text-align:center'> {% trans "Follow up" %}</h1>
+ <form method="post" enctype="multipart/form-data" id ="report">
+            {% csrf_token %}
+            {{ form|crispy}}
+</form>
+<button type="submit" class='btn btn-primary float-center' onclick="create_followup({{orgid}})">{% trans "add" %}</button>
+{% block scripts %}
+{% endblock scripts %}
+<script>
+function create_followup(orgid){
+        var organization = orgid; 
+        var report = $("#id_report").val();
+        ajax_config = {
+            url:"{% url 'create-followup' %}",
+            method: "post",
+            data: {
+                organization:organization,
+                report:report
+            },
+            success: function (response) {
+                    document.getElementById("report").reset();
+                    alert("Saved");
+                    window.location.href = "../organization/detail/"+orgid
+                },
+            error: function (response) {
+                    alert("your follow up didnt saved try again");
+                }
+        };
+        $.ajax(ajax_config);
+    }
+</script>
+{% endblock %}

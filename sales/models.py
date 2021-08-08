@@ -14,7 +14,8 @@ class FollowUp(models.Model):
     report = models.TextField(verbose_name=_("sale report"))
     organization = models.ForeignKey(
         Organization, verbose_name=_("organization"), on_delete=models.PROTECT)
-    creator = models.ForeignKey(User, verbose_name=_("written by"), on_delete=models.PROTECT)
+    creator = models.ForeignKey(User, verbose_name=_(
+        "written by"), on_delete=models.PROTECT)
     written_on = models.DateTimeField(
         verbose_name=_("written at"), auto_now_add=True)
 

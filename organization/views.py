@@ -65,7 +65,7 @@ class ProductList(mixins.LoginRequiredMixin, generic.ListView):
     paginate_by = 10
 
 
-class OrganizationListApi(mixins.LoginRequiredMixin, ListAPIView):
+class OrganizationListApi(ListAPIView):
     serializer_class = OrganSerializar
 
     def get_queryset(self):

@@ -81,11 +81,11 @@
                     var table = "";
                     $(response.result).each(function (index, obj) {
                         console.log(obj);
-                        var my_table = '<tr><td>' +(index+1)+ '</td><td>' + obj.creator + '</td><td>' + obj.written_on.split(' ')[0] + '</td><td>' + obj.report + '</td></tr>';
+                        var my_table = '<tr><td>' +(index+1)+ '</td><td>' + obj.creator__username + '</td><td>' +obj.written_on__time.substr(0, 5)+"&emsp;&emsp;&emsp;&emsp;&emsp;"+obj.written_on__date+'</td><td>' + obj.report + '</td></tr>';
                         table = table + my_table;
                     });
                     if (my_output_div.is(':empty')) {
-                        final_table = '<table class="table table-bordered table-striped" ><thead><tr><th>#</th><th>{% trans "user" %}</th><th>{% trans "date" %}</th><th>{% trans "report" %}</th></tr></thead><tbody>' + table + '</tbody></table>';
+                        final_table = '<table class="table table-bordered table-striped" ><thead><tr><th>#</th><th>{% trans "User" %}</th><th>{% trans "Date and time" %}</th><th>{% trans "Report" %}</th></tr></thead><tbody>' + table + '</tbody></table>';
                         my_output_div.append(final_table);
                     } else {
                         my_output_div.empty();

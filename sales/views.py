@@ -25,14 +25,16 @@ def email(request):  # send email to company
 def show_followup(request):
     orgid = request.GET.get("orgid")
     organ = models.Organization.objects.get(pk=orgid)
-    followups = FollowUp.objects.filter(
+    qs = FollowUp.objects.filter(
         organization=organ, creator=request.user)
-    return JsonResponse({"result": list(followups.values())})
+    followups = list(qs.values('creator__username',
+                     'written_on__date', 'written_on__time', 'report'))
+    return JsonResponse({"result": followups})
 
 
-@decorators.login_required
-@require_POST
-@csrf_exempt
+@ decorators.login_required
+@ require_POST
+@ csrf_exempt
 def create_followup(request):
     organization = models.Organization.objects.get(
         pk=request.POST.get("organization"))

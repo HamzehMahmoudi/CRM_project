@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
-# Create your models here.
+
 
 User = get_user_model()
 
@@ -37,7 +37,7 @@ class Product(models.Model):
 
 
 class Organization(models.Model):
-    """organization model"""
+    """organization model (our client)"""
     name = models.CharField(max_length=50, null=False,
                             blank=False, verbose_name=_("Organization name"))
     province = models.CharField(

@@ -3,7 +3,7 @@ from django.db.models.fields import related
 from . import models
 from django.shortcuts import redirect, render
 from django.views import generic
-from .forms import OrganForm
+from .forms import OrganizationForm
 from django.core.exceptions import PermissionDenied
 from rest_framework.generics import ListAPIView
 from .serializers import OrganSerializar
@@ -11,11 +11,11 @@ from rest_framework.exceptions import NotAuthenticated
 from django.contrib.auth import mixins
 
 
-class CreateOragan(mixins.LoginRequiredMixin, generic.CreateView):
+class CreateOrganization(mixins.LoginRequiredMixin, generic.CreateView):
     """
     salesman can add an organization using this view 
     """
-    form_class = OrganForm
+    form_class = OrganizationForm
     template_name = "organization/creatorgan.html"
     success_url = 'organlist'
 
@@ -26,7 +26,7 @@ class CreateOragan(mixins.LoginRequiredMixin, generic.CreateView):
         return redirect('organlist')
 
 
-class Organlist(mixins.LoginRequiredMixin, generic.ListView):
+class OrganizationList(mixins.LoginRequiredMixin, generic.ListView):
     """
     view to see all organizations together 
     """
@@ -38,7 +38,7 @@ class Organlist(mixins.LoginRequiredMixin, generic.ListView):
         return models.Organization.objects.filter(creator=self.request.user)
 
 
-class OrgDetail(mixins.LoginRequiredMixin, generic.DetailView):
+class OrganizationDetail(mixins.LoginRequiredMixin, generic.DetailView):
     model = models.Organization
     extra_context = {"form": FollowUpForm()}
 
@@ -50,9 +50,9 @@ class OrgDetail(mixins.LoginRequiredMixin, generic.DetailView):
             raise PermissionDenied
 
 
-class OrgUpdate(mixins.LoginRequiredMixin, generic.UpdateView):
+class OrganizationUpdate(mixins.LoginRequiredMixin, generic.UpdateView):
     model = models.Organization
-    form_class = OrganForm
+    form_class = OrganizationForm
     template_name = "organization/organ_edit.html"
 
     def form_valid(self, form):

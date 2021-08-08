@@ -2,7 +2,6 @@ from django.shortcuts import render
 from .forms import UserRegisterForm
 from django.views import generic
 from django.urls import reverse_lazy
-# Create your views here.
 
 
 # login and logout views represented using django views

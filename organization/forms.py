@@ -2,7 +2,7 @@ from django.forms import ModelForm
 from .models import Organization
 
 
-class OrganForm(ModelForm):
+class OrganizationForm(ModelForm):
 
     class Meta:
         model = Organization

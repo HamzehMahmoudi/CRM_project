@@ -26,6 +26,7 @@ class QuoteList(mixins.LoginRequiredMixin, generic.ListView):
     model = Quote
     template_name = 'quote/quotlst.html'
     paginate_by = 10
+    ordering = ["created_on"]
 
     def get_queryset(self):  # delete empty Quotes
         Quote.clean_list()
@@ -110,6 +111,7 @@ def add_item(request, qid):
 class SelectOrgan(mixins.LoginRequiredMixin, generic.ListView):
     model = orgmodel.Organization
     paginate_by = 10
+    ordering = ["registered_on"]
     template_name = "quote/select_organization.html"
 
     def get_queryset(self):

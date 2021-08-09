@@ -9,6 +9,7 @@ from rest_framework.generics import ListAPIView
 from .serializers import OrganSerializar
 from rest_framework.exceptions import NotAuthenticated
 from django.contrib.auth import mixins
+from django.urls import reverse_lazy
 
 
 class CreateOrganization(mixins.LoginRequiredMixin, generic.CreateView):
@@ -17,13 +18,13 @@ class CreateOrganization(mixins.LoginRequiredMixin, generic.CreateView):
     """
     form_class = OrganizationForm
     template_name = "organization/creatorgan.html"
-    success_url = 'organlist'
+    success_url = reverse_lazy('organizationlist')
 
     def form_valid(self, form):
         instance = form.save(commit=False)
         instance.creator = self.request.user
         instance.save()
-        return redirect('organlist')
+        return redirect('organizationlist')
 
 
 class OrganizationList(mixins.LoginRequiredMixin, generic.ListView):
@@ -31,8 +32,9 @@ class OrganizationList(mixins.LoginRequiredMixin, generic.ListView):
     view to see all organizations together 
     """
     model = models.Organization
-    template_name = "organization/organlist.html"
+    template_name = "organization/organizationlist.html"
     paginate_by = 10  # show 10 organization per page
+    ordering = ["registered_on"]
 
     def get_queryset(self):  # only org creator can see oganization
         return models.Organization.objects.filter(creator=self.request.user)
@@ -63,6 +65,7 @@ class OrganizationUpdate(mixins.LoginRequiredMixin, generic.UpdateView):
 class ProductList(mixins.LoginRequiredMixin, generic.ListView):
     model = models.Product
     paginate_by = 10
+    ordering = ["price"]
 
 
 class OrganizationListApi(ListAPIView):

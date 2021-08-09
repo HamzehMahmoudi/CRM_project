@@ -4,7 +4,6 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
-# Create your models here.
 
 User = get_user_model()
 

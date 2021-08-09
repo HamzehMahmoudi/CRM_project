@@ -1,3 +1,5 @@
+import json
+from django.core.exceptions import PermissionDenied
 from django.http.response import JsonResponse
 from sales.tasks import send_email_task
 from django.shortcuts import render, redirect
@@ -40,6 +42,13 @@ class FollowupFormView(mixins.LoginRequiredMixin, generic.TemplateView):
 def show_followup(request):
     orgid = request.GET.get("orgid")
     organ = models.Organization.objects.get(pk=orgid)
+    if organ.creator != request.user:
+        return JsonResponse(
+            data={
+                "success": False,
+            },
+            status=403,
+        )
     qs = FollowUp.objects.filter(
         organization=organ, creator=request.user).order_by("-written_on")
     followups = list(qs.values('creator__username',
@@ -53,6 +62,13 @@ def show_followup(request):
 def create_followup(request):
     organization = models.Organization.objects.get(
         pk=request.POST.get("organization"))
+    if organization.creator != request.user:
+        return JsonResponse(
+            data={
+                "success": False,
+            },
+            status=403,
+        )
     form = forms.FollowUpForm(data=request.POST)
     if form.is_valid():
         form.save(commit=False).creator = request.user

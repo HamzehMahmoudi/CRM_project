@@ -34,10 +34,9 @@ class OrganizationList(mixins.LoginRequiredMixin, generic.ListView):
     model = models.Organization
     template_name = "organization/organizationlist.html"
     paginate_by = 10  # show 10 organization per page
-    ordering = ["registered_on"]
 
     def get_queryset(self):  # only org creator can see oganization
-        return models.Organization.objects.filter(creator=self.request.user)
+        return models.Organization.objects.filter(creator=self.request.user).order_by("-registered_on")
 
 
 class OrganizationDetail(mixins.LoginRequiredMixin, generic.DetailView):
@@ -60,6 +59,13 @@ class OrganizationUpdate(mixins.LoginRequiredMixin, generic.UpdateView):
     def form_valid(self, form):
         form.save()
         return redirect("orgdetail", pk=self.get_object().pk)
+
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if self.request.user == obj.creator:  # only org creator can update organization
+            return super().get(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
 
 
 class ProductList(mixins.LoginRequiredMixin, generic.ListView):

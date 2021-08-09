@@ -26,15 +26,15 @@ class QuoteList(mixins.LoginRequiredMixin, generic.ListView):
     model = Quote
     template_name = 'quote/quotlst.html'
     paginate_by = 10
-    ordering = ["created_on"]
 
     def get_queryset(self):  # delete empty Quotes
         Quote.clean_list()
-        qs = Quote.objects.filter(user=self.request.user)
+        qs = Quote.objects.filter(
+            user=self.request.user).order_by("-created_on")
         return qs
 
 
-@method_decorator(xframe_options_sameorigin, name='dispatch')
+@ method_decorator(xframe_options_sameorigin, name='dispatch')
 class QuoteDetail(mixins.LoginRequiredMixin, generic.DetailView):
     """
 
@@ -62,10 +62,12 @@ class QuoteDetail(mixins.LoginRequiredMixin, generic.DetailView):
                 return super().get(request, *args, **kwargs)
 
 
-@decorators.login_required
+@ decorators.login_required
 def create_quote(request, pk):
     try:
         organ = orgmodel.Organization.objects.get(pk=pk)
+        if request.user != organ.creator:
+            raise PermissionDenied
         quote = Quote.objects.create(organization=organ, user=request.user)
         quote.save()
         q = Quote.objects.get(pk=quote.pk)
@@ -75,20 +77,25 @@ def create_quote(request, pk):
         raise Http404("Organization not found")
 
 
+@ decorators.login_required
 def delete_quote_item(request, pk):
     instance = QuoteItem.objects.get(pk=pk)
+    if instance.quote.user != request.user:
+        raise PermissionDenied
     qpk = instance.quote.pk
     instance.delete()
     return redirect("quote-detail", pk=qpk)
 
 
-@decorators.login_required
+@ decorators.login_required
 def add_item(request, qid):
     """
     add item to Quote
     """
     try:
         quote = Quote.objects.get(pk=qid)
+        if quote.user != request.user:
+            raise PermissionDenied
         QouteFormSet = inlineformset_factory(
             Quote, QuoteItem, fields=('product', 'qty', 'discount'), can_delete=False)
         formset = QouteFormSet(
@@ -111,11 +118,10 @@ def add_item(request, qid):
 class SelectOrgan(mixins.LoginRequiredMixin, generic.ListView):
     model = orgmodel.Organization
     paginate_by = 10
-    ordering = ["registered_on"]
     template_name = "quote/select_organization.html"
 
     def get_queryset(self):
-        return orgmodel.Organization.objects.filter(creator=self.request.user)
+        return orgmodel.Organization.objects.filter(creator=self.request.user).order_by("-registered_on")
 
 
 class QuoteItemUpdate(mixins.LoginRequiredMixin, generic.UpdateView):

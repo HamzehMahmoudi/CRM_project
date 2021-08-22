@@ -9,8 +9,9 @@ Customer relationship management app that can help you manage your sales and cus
  - Create Quote 
  - Follow up sales
  - Send quote as Email to your customer 
- - Log email history
+ - save email history
  - Export Quotes as PDF
+ - API for see each salesman customers (use JWT Authentication)
  - individualize each salesman profile  and sale history (not added yet)
  
 

@@ -18,6 +18,8 @@ Customer relationship management app that can help you manage your sales and cus
 ## Requirements
  - **Python 3.8**
  - **Django 3.2**
+ - **Django rest framework**
+ - **SimpleJWT**
  - **Postgresql**
  - **Weasyprint**    
  - **Celery**

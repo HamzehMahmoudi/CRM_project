@@ -72,7 +72,7 @@ class OrganizationUpdate(mixins.LoginRequiredMixin, generic.UpdateView):
 
         else:
             logger.info(
-                f"{self.request.user} tried to update {obj.creator}\'s  organization ")
+                f"{self.request.user} tried to update {obj.creator}\'s  organization {obj}")
             raise PermissionDenied
 
 

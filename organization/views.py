@@ -10,6 +10,9 @@ from .serializers import OrganSerializar
 from rest_framework.exceptions import NotAuthenticated
 from django.contrib.auth import mixins
 from django.urls import reverse_lazy
+import logging
+
+logger = logging.getLogger("logfile")
 
 
 class CreateOrganization(mixins.LoginRequiredMixin, generic.CreateView):
@@ -24,6 +27,7 @@ class CreateOrganization(mixins.LoginRequiredMixin, generic.CreateView):
         instance = form.save(commit=False)
         instance.creator = self.request.user
         instance.save()
+        logger.info(f"{self.request.user} added {instance}")
         return redirect('organizationlist')
 
 
@@ -57,14 +61,18 @@ class OrganizationUpdate(mixins.LoginRequiredMixin, generic.UpdateView):
     template_name = "organization/organ_edit.html"
 
     def form_valid(self, form):
-        form.save()
+        instance = form.save()
+        logger.info(f"{instance} updated by {self.request.user}")
         return redirect("orgdetail", pk=self.get_object().pk)
 
     def get(self, request, *args, **kwargs):
         obj = self.get_object()
         if self.request.user == obj.creator:  # only org creator can update organization
             return super().get(request, *args, **kwargs)
+
         else:
+            logger.info(
+                f"{self.request.user} tried to update {obj.creator}\'s  organization ")
             raise PermissionDenied
 
 
